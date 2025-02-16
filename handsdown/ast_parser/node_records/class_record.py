@@ -1,7 +1,7 @@
 """
 Wrapper for an `ast.ClassDef` node.
 """
-from typing import Iterator, List, Optional, Set
+from collections.abc import Iterator
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.class_analyzer import ClassAnalyzer
@@ -23,15 +23,15 @@ class ClassRecord(NodeRecord):
 
     def __init__(self, node: ast.ClassDef) -> None:
         super().__init__(node)
-        self.method_records: List[FunctionRecord] = []
-        self.decorator_records: List[ExpressionRecord] = []
-        self.argument_records: List[ArgumentRecord] = []
-        self.base_records: List[ExpressionRecord] = []
+        self.method_records: list[FunctionRecord] = []
+        self.decorator_records: list[ExpressionRecord] = []
+        self.argument_records: list[ArgumentRecord] = []
+        self.base_records: list[ExpressionRecord] = []
         self.name = node.name
         self.title = self.name
         self.docstring = self._get_docstring()
 
-    def find_record(self, name: str) -> Optional[NodeRecord]:
+    def find_record(self, name: str) -> NodeRecord | None:
         """
         Find child method or attribute record.
 
@@ -55,11 +55,11 @@ class ClassRecord(NodeRecord):
         return None
 
     @property
-    def related_names(self) -> Set[str]:
+    def related_names(self) -> set[str]:
         """
         Set of related names.
         """
-        result: Set[str] = set()
+        result: set[str] = set()
         for decorator in self.decorator_records:
             result.add(decorator.name)
             result.update(decorator.related_names)
@@ -84,7 +84,7 @@ class ClassRecord(NodeRecord):
         for attribute_record in self.attribute_records:
             yield attribute_record
 
-    def get_public_methods(self) -> List[FunctionRecord]:
+    def get_public_methods(self) -> list[FunctionRecord]:
         """
         Get Class public methods.
 
@@ -120,11 +120,11 @@ class ClassRecord(NodeRecord):
 
         self.method_records.sort(key=lambda x: x.name)
 
-    def _render_parts(self) -> List[RenderExpr]:
+    def _render_parts(self) -> list[RenderExpr]:
         return [f"class {self.name}"]
 
     @property
-    def init_method(self) -> Optional[FunctionRecord]:
+    def init_method(self) -> FunctionRecord | None:
         """
         Get the `__init__` method.
         """

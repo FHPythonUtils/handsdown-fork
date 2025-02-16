@@ -1,8 +1,8 @@
 """
 Wrapper for an `ast.Module` node with corresponding node info.
 """
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Dict, Iterator, List, Optional, Set
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.module_analyzer import ModuleAnalyzer
@@ -29,16 +29,16 @@ class ModuleRecord(NodeRecord):
 
     def __init__(self, node: ast.Module) -> None:
         super().__init__(node)
-        self.all_names: List[str] = []
-        self.class_records: List[ClassRecord] = []
-        self.function_records: List[FunctionRecord] = []
-        self.import_records: List[ImportRecord] = []
-        self.source_path = Path("")
-        self.source_lines: List[str] = []
+        self.all_names: list[str] = []
+        self.class_records: list[ClassRecord] = []
+        self.function_records: list[FunctionRecord] = []
+        self.import_records: list[ImportRecord] = []
+        self.source_path = Path()
+        self.source_lines: list[str] = []
         self.name = "module"
         self.title = ""
         self.import_string = ImportString("")
-        self.import_string_map: Dict[ImportString, NodeRecord] = {}
+        self.import_string_map: dict[ImportString, NodeRecord] = {}
         self.docstring = self._get_docstring()
 
     @classmethod
@@ -69,7 +69,7 @@ class ModuleRecord(NodeRecord):
         record.source_lines = content.split("\n")
         return record
 
-    def find_record(self, import_string: ImportString) -> Optional[NodeRecord]:
+    def find_record(self, import_string: ImportString) -> NodeRecord | None:
         """
         Find child in the Module by an absolute or relative import string.
 
@@ -130,7 +130,7 @@ class ModuleRecord(NodeRecord):
             attribute_record.import_string = self.import_string + attribute_record.name
             self.import_string_map[attribute_record.import_string] = attribute_record
 
-    def _render_parts(self) -> List[RenderExpr]:
+    def _render_parts(self) -> list[RenderExpr]:
         return [f"module {self.name}"]
 
     def build_children(self) -> None:
@@ -192,7 +192,7 @@ class ModuleRecord(NodeRecord):
             function_lines = self._get_function_def_lines(function_record)
             function_record.parse_type_comments(function_lines)
 
-    def _get_function_def_lines(self, function_record: FunctionRecord) -> List[str]:
+    def _get_function_def_lines(self, function_record: FunctionRecord) -> list[str]:
         """
         Get all function definition lines for comment type hints lookup.
 
@@ -207,7 +207,7 @@ class ModuleRecord(NodeRecord):
         assert isinstance(function_record.node, (ast.AsyncFunctionDef, ast.FunctionDef))
         function_record_node: ast.FunctionDef = function_record.node  # type: ignore
 
-        result: List[str] = []
+        result: list[str] = []
         start_index = function_record.line_number - 1
         end_index = function_record_node.body[0].lineno - 1
         result = self.source_lines[start_index:end_index]
@@ -229,7 +229,7 @@ class ModuleRecord(NodeRecord):
         """
         assert isinstance(node_record.node, (ast.Assign, ast.AnnAssign))
 
-        result: List[str] = []
+        result: list[str] = []
         start_index = node_record.node.lineno - 2
 
         try:
@@ -247,14 +247,14 @@ class ModuleRecord(NodeRecord):
         result.reverse()
         return "\n  ".join(result)
 
-    def get_related_import_strings(self, node_record: NodeRecord) -> Set[ImportString]:
+    def get_related_import_strings(self, node_record: NodeRecord) -> set[ImportString]:
         """
         Get a set of `related_names` found in module class, function, method and attribute records.
 
         Returns:
             A set of absolute import strings found.
         """
-        result: Set[ImportString] = set()
+        result: set[ImportString] = set()
         related_names = node_record.related_names
         if not related_names:
             return result

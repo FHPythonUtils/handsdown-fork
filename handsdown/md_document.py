@@ -6,7 +6,7 @@ import re
 import traceback
 from pathlib import Path
 from types import TracebackType
-from typing import List, Optional, Type, TypeVar
+from typing import TypeVar
 
 from handsdown.constants import ENCODING
 from handsdown.utils.indent_trimmer import IndentTrimmer
@@ -60,7 +60,7 @@ class MDDocument:
     _section_separator = "\n\n"
 
     def __init__(self, path: Path, encoding: str = ENCODING) -> None:
-        self._sections: List[str] = []
+        self._sections: list[str] = []
         self._content = ""
         self._title = ""
         self._subtitle = ""
@@ -75,9 +75,9 @@ class MDDocument:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_value: Optional[BaseException],
-        tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        tb: TracebackType | None,
     ) -> None:
         if exc_value:
             traceback.print_tb(tb)
@@ -177,7 +177,7 @@ class MDDocument:
         return f"[{title}]({link})"
 
     def render_doc_link(
-        self, title: str, anchor: str = "", target_path: Optional[Path] = None
+        self, title: str, anchor: str = "", target_path: Path | None = None
     ) -> str:
         """
         Render Markdown link to a local MD document, use relative path as a link.
@@ -294,7 +294,7 @@ class MDDocument:
         self._content = self._build_content()
 
     @property
-    def sections(self) -> List[str]:
+    def sections(self) -> list[str]:
         """
         All non-special `sections` of the document.
         """

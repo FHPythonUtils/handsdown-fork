@@ -1,9 +1,9 @@
 """
 Loader for python source code.
 """
+from __future__ import annotations
 
-from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from handsdown.ast_parser.node_records.module_record import ModuleRecord
 from handsdown.constants import ENCODING
@@ -12,6 +12,9 @@ from handsdown.utils.import_string import ImportString
 from handsdown.utils.logger import get_logger
 from handsdown.utils.path_finder import PathFinder
 from handsdown.utils.strings import extract_md_title
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class Loader:
@@ -56,7 +59,7 @@ class Loader:
         relative_output_path = relative_source_path.parent / file_name
         return self._output_path / relative_output_path
 
-    def get_module_record(self, source_path: Path) -> Optional[ModuleRecord]:
+    def get_module_record(self, source_path: Path) -> ModuleRecord | None:
         """
         Build `ModuleRecord` for given `source_path`.
 

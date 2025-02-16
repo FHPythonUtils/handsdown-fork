@@ -1,7 +1,7 @@
 """
 `Section` block.
 """
-from typing import Iterable
+from collections.abc import Iterable
 
 from handsdown.utils.indent_trimmer import IndentTrimmer
 

@@ -1,7 +1,6 @@
 """
 Wrapper for an `ast.Import` and `ast.ImportFrom` nodes.
 """
-from typing import List, Optional
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.node_records.node_record import NodeRecord
@@ -41,7 +40,7 @@ class ImportRecord(NodeRecord):
 
         return ImportString(self.name)
 
-    def _render_parts(self) -> List[RenderExpr]:
+    def _render_parts(self) -> list[RenderExpr]:
         if self.source:
             if self.local_name != self.name:
                 return [f"from {self.source} import {self.name} as {self.local_name}"]
@@ -52,7 +51,7 @@ class ImportRecord(NodeRecord):
 
         return [f"import {self.name}"]
 
-    def match(self, name: str) -> Optional[ImportString]:
+    def match(self, name: str) -> ImportString | None:
         """
         Check if `name` matches or stats with a local name.
 

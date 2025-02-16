@@ -2,7 +2,7 @@
 Utility for removing indentation for sections and lines.
 """
 
-from typing import Iterable, List
+from collections.abc import Iterable
 
 __all__ = ["IndentTrimmer"]
 
@@ -55,7 +55,7 @@ class IndentTrimmer:
         return "\n".join(new_lines)
 
     @classmethod
-    def trim_lines(cls, lines: Iterable[str]) -> List[str]:
+    def trim_lines(cls, lines: Iterable[str]) -> list[str]:
         """
         Trim minimum indent from each line of text.
 

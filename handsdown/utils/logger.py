@@ -2,12 +2,11 @@
 Utilities for stdout stream logger.
 """
 import logging
-from typing import Optional
 
 from handsdown.constants import LOGGER_NAME
 
 
-def get_logger(level: Optional[int] = None) -> logging.Logger:
+def get_logger(level: int | None = None) -> logging.Logger:
     """
     Get stdout stream logger.
 

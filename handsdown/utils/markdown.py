@@ -1,7 +1,8 @@
 """
 Utils for markdown rendering.
 """
-from typing import Dict, Iterable, List, Type, TypeVar
+from collections.abc import Iterable
+from typing import TypeVar
 
 _R = TypeVar("_R", bound="TableOfContents")
 
@@ -38,19 +39,19 @@ class TableOfContents:
     """
 
     def __init__(self, headers: Iterable[Header]) -> None:
-        self.headers: List[Header] = list(headers)
+        self.headers: list[Header] = list(headers)
 
     @classmethod
-    def parse(cls: Type[_R], text: str) -> _R:
+    def parse(cls: type[_R], text: str) -> _R:
         """
         Parse table of Contents for MarkDown text.
 
         Arguments:
             text -- MarkDown text.
         """
-        headers: List[Header] = []
+        headers: list[Header] = []
         in_codeblock = False
-        title_counter: Dict[str, int] = {}
+        title_counter: dict[str, int] = {}
         for line in text.splitlines():
             if line.startswith("```"):
                 in_codeblock = not in_codeblock
@@ -72,7 +73,7 @@ class TableOfContents:
         """
         Render ToC to string.
         """
-        result: List[str] = []
+        result: list[str] = []
         for header in self.headers:
             if header.level > max_level:
                 continue
@@ -91,7 +92,7 @@ def insert_md_toc(text: str, depth: int = 3) -> str:
     toc = TableOfContents.parse(text)
     toc_lines = toc.render(depth).splitlines()
     lines = text.splitlines()
-    result: List[str] = []
+    result: list[str] = []
     inserted = False
     for line in lines:
         if not inserted and line.startswith("## "):

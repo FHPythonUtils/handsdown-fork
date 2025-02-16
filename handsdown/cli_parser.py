@@ -5,17 +5,13 @@ import argparse
 import contextlib
 import logging
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
+from importlib import metadata
 from pathlib import Path
-from typing import Iterable, List
 from urllib.parse import urlparse, urlunparse
 
 from handsdown.constants import ENCODING, EXCLUDE_EXPRS, PACKAGE_NAME, Theme
-
-try:
-    import importlib.metadata as metadata  # type: ignore
-except ModuleNotFoundError:
-    import importlib_metadata as metadata  # type: ignore
 
 
 @dataclass
@@ -29,13 +25,13 @@ class CLINamespace:
     output_path: Path
     toc_depth: int
     log_level: int
-    include: List[str]
-    exclude: List[str]
+    include: list[str]
+    exclude: list[str]
     source_code_url: str
     source_code_path: Path
     branch: str
     project_name: str
-    files: List[Path]
+    files: list[Path]
     cleanup: bool
     encoding: str
     create_configs: bool
@@ -151,7 +147,7 @@ def parse_theme(name: str) -> Theme:
         return Theme(name)
     except ValueError:
         choices = ", ".join([i.value for i in Theme])
-        raise argparse.ArgumentTypeError(f"Invalid theme {name}, choices are: {choices}")
+        raise argparse.ArgumentTypeError(f"Invalid theme {name}, choices are: {choices}") from None
 
 
 def _get_package_version() -> str:

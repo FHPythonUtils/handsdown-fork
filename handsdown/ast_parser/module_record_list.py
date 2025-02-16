@@ -1,7 +1,8 @@
 """
 Aggregation of `ModuleRecord` objects.
 """
-from typing import Any, Dict, Iterator, List, Optional, Set
+from collections.abc import Iterator
+from typing import Any
 
 from handsdown.ast_parser.node_records.module_record import ModuleRecord
 from handsdown.utils.import_string import ImportString
@@ -15,10 +16,10 @@ class ModuleRecordList:
 
     def __init__(self) -> None:
         self._logger = get_logger()
-        self.data: List[ModuleRecord] = []
-        self.import_string_map: Dict[ImportString, Any] = {}
+        self.data: list[ModuleRecord] = []
+        self.import_string_map: dict[ImportString, Any] = {}
 
-    def find_module_record(self, import_string: ImportString) -> Optional[ModuleRecord]:
+    def find_module_record(self, import_string: ImportString) -> ModuleRecord | None:
         """
         Find `ModuleRecord` by it's import string.
 
@@ -40,7 +41,7 @@ class ModuleRecordList:
 
         return None
 
-    def get_package_names(self) -> Set[str]:
+    def get_package_names(self) -> set[str]:
         """
         Get top level import strings.
 

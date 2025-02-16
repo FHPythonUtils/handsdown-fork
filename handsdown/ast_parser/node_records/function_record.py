@@ -2,7 +2,7 @@
 Wrapper for an `ast.FunctionDef` node.
 """
 import re
-from typing import Iterable, List, Optional, Set
+from collections.abc import Iterable
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.function_analyzer import FunctionAnalyzer
@@ -26,10 +26,10 @@ class FunctionRecord(NodeRecord):
 
     def __init__(self, node: ASTFunctionDef, is_method: bool) -> None:
         super().__init__(node)
-        self.argument_records: List[ArgumentRecord] = []
+        self.argument_records: list[ArgumentRecord] = []
         self.is_method = is_method
-        self.return_type_hint: Optional[ExpressionRecord] = None
-        self.decorator_records: List[ExpressionRecord] = []
+        self.return_type_hint: ExpressionRecord | None = None
+        self.decorator_records: list[ExpressionRecord] = []
         self.is_staticmethod = False
         self.is_classmethod = False
         self.is_async = isinstance(node, ast.AsyncFunctionDef)
@@ -38,11 +38,11 @@ class FunctionRecord(NodeRecord):
         self.docstring = self._get_docstring()
 
     @property
-    def related_names(self) -> Set[str]:
+    def related_names(self) -> set[str]:
         """
         Set of related names.
         """
-        result: Set[str] = set()
+        result: set[str] = set()
         for decorator_record in self.decorator_records:
             result.update(decorator_record.related_names)
         for argument_record in self.argument_records:
@@ -77,7 +77,7 @@ class FunctionRecord(NodeRecord):
                     self.is_classmethod = True
 
     @staticmethod
-    def _strip_arg_type(arg_type: str) -> List[str]:
+    def _strip_arg_type(arg_type: str) -> list[str]:
         bracket_count = 0
         result = [""]
         for c in arg_type:
@@ -134,7 +134,7 @@ class FunctionRecord(NodeRecord):
                     argument = self.argument_records[argument_index]
                     argument.type_hint = TextRecord(argument.node, arg_type.strip())
 
-    def _render_parts(self) -> List[RenderExpr]:
+    def _render_parts(self) -> list[RenderExpr]:
         return [f"def {self.name}()"]
 
     def is_init(self) -> bool:

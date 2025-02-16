@@ -2,8 +2,8 @@
 Main handsdown documentation generator.
 """
 import re
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
 
 from handsdown.ast_parser.module_record_list import ModuleRecordList
 from handsdown.ast_parser.node_records.attribute_record import AttributeRecord
@@ -64,12 +64,12 @@ class BaseGenerator:
         input_path: Path,
         output_path: Path,
         source_paths: Iterable[Path],
-        project_name: Optional[str] = None,
-        docstring_processor: Optional[BaseDocstringProcessor] = None,
-        loader: Optional[Loader] = None,
+        project_name: str | None = None,
+        docstring_processor: BaseDocstringProcessor | None = None,
+        loader: Loader | None = None,
         raise_errors: bool = False,
-        source_code_url: Optional[str] = None,
-        source_code_path: Optional[Path] = None,
+        source_code_url: str | None = None,
+        source_code_path: Path | None = None,
         toc_depth: int = 1,
         encoding: str = ENCODING,
     ) -> None:
@@ -84,7 +84,7 @@ class BaseGenerator:
         self._raise_errors = raise_errors
         self._encoding = encoding
         self._jinja_manager = JinjaManager()
-        self._md_document_map: Dict[Path, MDDocument] = {}
+        self._md_document_map: dict[Path, MDDocument] = {}
 
         # create output folder if it does not exist
         if not self._output_path.exists():
@@ -144,7 +144,7 @@ class BaseGenerator:
         """
         self._logger.debug("Removing orphaned docs")
         preserve_paths = {self.get_md_document(i).path for i in self.module_records}
-        orphaned_dirs: List[Path] = []
+        orphaned_dirs: list[Path] = []
         preserve_paths.add(self.md_index.path)
 
         for doc_path in PathFinder(self._output_path).glob("**/*.md"):
@@ -331,11 +331,10 @@ class BaseGenerator:
         record: NodeRecord,
         module_record: ModuleRecord,
         md_document: MDDocument,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Get links to other modules that are referenced in the docstring.
         """
-
         related_import_strings = module_record.get_related_import_strings(record)
         links = set()
         for import_string in related_import_strings:
@@ -361,7 +360,7 @@ class BaseGenerator:
 
         return sorted(links)
 
-    def get_external_configs_templates(self) -> Tuple[Tuple[Path, Path], ...]:
+    def get_external_configs_templates(self) -> tuple[tuple[Path, Path], ...]:
         """
         Get a tuple with pairs of template path to project path
         """
@@ -379,8 +378,7 @@ class BaseGenerator:
 
     def _get_output_path_str(self) -> str:
         result = str(self._output_path.relative_to(self._root_path))
-        if result.startswith("./"):
-            result = result[2:]
+        result = result.removeprefix("./")
         return result
 
     def _get_main_source_code_url(self) -> str:
@@ -412,7 +410,7 @@ class BaseGenerator:
             if self._write_changed(output_path, content):
                 self._logger.info(f"Updated config {print_path(output_path)}")
 
-    def get_children_module_records(self, parent: ModuleRecord) -> List[ModuleRecord]:
+    def get_children_module_records(self, parent: ModuleRecord) -> list[ModuleRecord]:
         """
         Get all module records that are children of this module.
         """

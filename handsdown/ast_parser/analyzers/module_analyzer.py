@@ -1,7 +1,8 @@
 """
 AST analyzer for `ast.Module` records.
 """
-from typing import List, Union
+
+from typing import Union
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.base_analyzer import BaseAnalyzer
@@ -15,11 +16,11 @@ class ModuleAnalyzer(BaseAnalyzer):
 
     def __init__(self) -> None:
         super().__init__()
-        self.all_names: List[str] = []
-        self.import_nodes: List[ASTImport] = []
-        self.function_nodes: List[ASTFunctionDef] = []
-        self.attribute_nodes: List[Union[ast.Assign, ast.AnnAssign]] = []
-        self.class_nodes: List[ast.ClassDef] = []
+        self.all_names: list[str] = []
+        self.import_nodes: list[ASTImport] = []
+        self.function_nodes: list[ASTFunctionDef] = []
+        self.attribute_nodes: list[Union[ast.Assign, ast.AnnAssign]] = []
+        self.class_nodes: list[ast.ClassDef] = []
 
     def visit_Import(self, node: ast.Import) -> None:
         """
@@ -165,8 +166,8 @@ class ModuleAnalyzer(BaseAnalyzer):
         # gather public names from `__all__` directive
         if name == "__all__" and isinstance(node.value, (ast.List, ast.Tuple, ast.Set)):
             for element in node.value.elts:
-                if isinstance(element, (ast.Str, ast.Constant)):
-                    value = element.s
+                if isinstance(element, ast.Constant):
+                    value = element.value
                     if isinstance(value, bytes):
                         value = value.decode("utf-8")
                     self.all_names.append(value)

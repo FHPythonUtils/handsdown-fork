@@ -2,7 +2,6 @@
 Wrapper for an `ast.expr` node.
 """
 import re
-from typing import List, Set
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.expression_analyzer import ExpressionAnalyzer
@@ -22,11 +21,11 @@ class ExpressionRecord(NodeRecord):
 
     def __init__(self, node: ast.AST) -> None:
         super().__init__(node)
-        self.parts: List[Node] = []
+        self.parts: list[Node] = []
         self.analyzer = ExpressionAnalyzer()
 
     @property
-    def related_names(self) -> Set[str]:
+    def related_names(self) -> set[str]:
         """
         Set of related names.
         """
@@ -41,8 +40,8 @@ class ExpressionRecord(NodeRecord):
             self.parts = self.analyzer.parts
             return
 
-    def _render_parts(self) -> List[RenderExpr]:
-        result: List[RenderExpr] = []
+    def _render_parts(self) -> list[RenderExpr]:
+        result: list[RenderExpr] = []
         for part in self.parts:
             if isinstance(part, ast.AST):
                 result.append(ExpressionRecord(part))

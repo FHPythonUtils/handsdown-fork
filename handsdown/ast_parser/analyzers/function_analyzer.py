@@ -1,7 +1,8 @@
 """
 AST analyzer for `ast.FunctionDef` records.
 """
-from typing import Any, List, Optional, Sequence
+from collections.abc import Sequence
+from typing import Any, List, Optional
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.base_analyzer import BaseAnalyzer

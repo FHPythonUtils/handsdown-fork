@@ -1,5 +1,4 @@
 import shutil
-import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import MagicMock, patch

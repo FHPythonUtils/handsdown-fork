@@ -1,7 +1,7 @@
 """
 Wrapper for python import strings.
 """
-from typing import Any, List, TypeVar
+from typing import TypeVar
 
 from handsdown.exceptions import ImportStringError
 
@@ -76,7 +76,7 @@ class ImportString:
         """
         return bool(self.value)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         """
         Compare to another `ImportString` or a string.
 
@@ -112,7 +112,7 @@ class ImportString:
         return False
 
     @property
-    def parts(self) -> List[str]:
+    def parts(self) -> list[str]:
         """
         Parts of import string splitted by dots.
 
@@ -161,7 +161,7 @@ class ImportString:
         """
         return self.value.startswith(f"{import_string}.")
 
-    def get_parents(self: _R) -> List[_R]:
+    def get_parents(self: _R) -> list[_R]:
         """
         Get all parents.
 

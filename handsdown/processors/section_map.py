@@ -1,7 +1,7 @@
 """
 Module for splitting docstring into `Section` groups.
 """
-from typing import Dict, Iterator, List
+from collections.abc import Iterator
 
 from handsdown.processors.section import Section
 from handsdown.processors.section_block import SectionBlock
@@ -20,8 +20,8 @@ class SectionMap:
 
     def __init__(self) -> None:
         super().__init__()
-        self._order: List[str] = []
-        self.sections: Dict[str, Section] = {}
+        self._order: list[str] = []
+        self.sections: dict[str, Section] = {}
 
     def add_line_indent(self, section_name: str, line: str) -> None:
         """

@@ -2,7 +2,7 @@
 Base class for all node records.
 """
 from abc import abstractmethod
-from typing import Iterable, List, Optional, Set
+from collections.abc import Iterable
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.type_defs import RenderExpr
@@ -22,9 +22,9 @@ class NodeRecord:
         self.name = self.node.__class__.__name__
         self.title = ""
         self.is_method = False
-        self.attribute_records: List["NodeRecord"] = []
+        self.attribute_records: list[NodeRecord] = []
         self.parsed = False
-        self._line_number: Optional[int] = None
+        self._line_number: int | None = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} name={self.name}>"
@@ -66,7 +66,7 @@ class NodeRecord:
         return DocstringFormatter(docstring).render()
 
     @property
-    def related_names(self) -> Set[str]:
+    def related_names(self) -> set[str]:
         """
         Get a set of referenced object names in `node`.
 
@@ -116,7 +116,7 @@ class NodeRecord:
             self.parse()
 
         parts = self._render_parts()
-        line_parts: List[RenderExpr] = []
+        line_parts: list[RenderExpr] = []
         lines = []
         for part_index, part in enumerate(parts):
             line_parts.append(part)
@@ -132,10 +132,10 @@ class NodeRecord:
         return "".join(lines).rstrip("\n")
 
     @abstractmethod
-    def _render_parts(self) -> List[RenderExpr]:
+    def _render_parts(self) -> list[RenderExpr]:
         pass
 
-    def get_documented_attribute_strings(self) -> List[str]:
+    def get_documented_attribute_strings(self) -> list[str]:
         """
         Render each of `attribute_records` to a Markdown string.
 

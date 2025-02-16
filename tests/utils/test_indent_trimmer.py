@@ -4,7 +4,7 @@ from handsdown.utils.indent_trimmer import IndentTrimmer
 class TestIndentTrimmer:
     def test_trim_empty_lines(self):
         assert IndentTrimmer.trim_empty_lines("\n  \n test\ntest2\n \n ") == " test\ntest2"
-        assert IndentTrimmer.trim_empty_lines("\n  \n\n ") == ""
+        assert not IndentTrimmer.trim_empty_lines("\n  \n\n ")
         assert IndentTrimmer.trim_empty_lines("\n  \n  test \n ") == "  test "
 
     def test_trim_text(self):

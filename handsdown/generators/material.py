@@ -2,7 +2,6 @@
 Read the Docs documentation generator.
 """
 from pathlib import Path
-from typing import Tuple
 
 from handsdown.generators.base import BaseGenerator
 
@@ -17,7 +16,7 @@ class MaterialGenerator(BaseGenerator):
 
     insert_toc = False
 
-    def get_external_configs_templates(self) -> Tuple[Tuple[Path, Path], ...]:
+    def get_external_configs_templates(self) -> tuple[tuple[Path, Path], ...]:
         """
         Get a tuple with pairs of template path to project path
         """

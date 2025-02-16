@@ -1,6 +1,7 @@
 [project]
 name = "handsdown"
 version = "2.1.0"
+requires-python = ">=3.9"
 description = "Python docstring-based documentation generator for lazy perfectionists."
 authors = [{ name = "Vlad Emelianov", email = "vlad.emelianov.nz@gmail.com" }]
 license = { file = "LICENSE" }
@@ -96,12 +97,13 @@ exclude = [
 
 line-length = 100
 indent-width = 4
-target-version = "py310"
+target-version = "py39"
 
 [tool.ruff.lint]
 preview = true
 select = ["ALL"]
 ignore = [
+    "PYI",
     "ARG002",  # unused-argument
     "COM812",  # missing-trailing-comma
     "D107",    # undocumented-public-init
@@ -135,6 +137,8 @@ exclude = ["*.pyi", "examples/*", "integration/*"]
 
 [tool.ruff.lint.per-file-ignores]
 "test_*.py" = [
+    "ALL",
+    "ANN",     # missing-type-annotation
     "D",       # missing-docstring
     "S101",    # use-of-assert
     "N803",    # argument-name-does-not-match
@@ -173,4 +177,4 @@ reportMissingTypeArgument = "error"
 reportIncompatibleMethodOverride = "error"
 reportIncompatibleVariableOverride = "error"
 reportUnknownParameterType = "error"
-pythonVersion = "3.7"
+pythonVersion = "3.9"

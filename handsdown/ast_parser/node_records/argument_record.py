@@ -1,7 +1,6 @@
 """
 Wrapper for an `ast.arg` node.
 """
-from typing import List, Optional, Set
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.node_records.expression_record import ExpressionRecord
@@ -25,19 +24,19 @@ class ArgumentRecord(NodeRecord):
         self,
         node: ast.arg,
         name: str,
-        type_hint: Optional[ast.expr] = None,
+        type_hint: ast.expr | None = None,
         prefix: str = "",
     ) -> None:
         super().__init__(node)
-        self._default: Optional[ExpressionRecord] = None
-        self.type_hint: Optional[ExpressionRecord] = None
+        self._default: ExpressionRecord | None = None
+        self.type_hint: ExpressionRecord | None = None
         if type_hint:
             self.type_hint = ExpressionRecord(type_hint)
         self.prefix = prefix
         self.name = name
 
     @property
-    def default(self) -> Optional[ExpressionRecord]:
+    def default(self) -> ExpressionRecord | None:
         """
         Default value of the argument.
 
@@ -69,7 +68,7 @@ class ArgumentRecord(NodeRecord):
             self._default = ExpressionRecord(node)
 
     @property
-    def related_names(self) -> Set[str]:
+    def related_names(self) -> set[str]:
         """
         Set of related names.
         """
@@ -81,8 +80,8 @@ class ArgumentRecord(NodeRecord):
 
         return result
 
-    def _render_parts(self) -> List[RenderExpr]:
-        parts: List[RenderExpr] = []
+    def _render_parts(self) -> list[RenderExpr]:
+        parts: list[RenderExpr] = []
         if self.prefix:
             parts.append(self.prefix)
 

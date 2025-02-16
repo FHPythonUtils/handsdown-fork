@@ -2,7 +2,6 @@
 Main CLI entrypoint for `handsdown`.
 """
 import sys
-from typing import Type
 
 from handsdown.cli_parser import CLINamespace, parse_args
 from handsdown.constants import SOURCES_GLOB, Theme
@@ -14,7 +13,7 @@ from handsdown.utils.logger import get_logger
 from handsdown.utils.path_finder import PathFinder
 
 
-def select_generator_cls(theme: Theme) -> Type[BaseGenerator]:
+def select_generator_cls(theme: Theme) -> type[BaseGenerator]:
     """
     Select a generator based on the theme.
     """

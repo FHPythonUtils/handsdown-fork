@@ -5,8 +5,9 @@ Supports `.gitignore`-like `include` and `exclude` patterns.
 """
 
 import fnmatch
+from collections.abc import Iterable, Iterator
 from pathlib import Path
-from typing import Iterable, Iterator, List, TypeVar
+from typing import TypeVar
 
 from handsdown.exceptions import PathFinderError
 
@@ -52,8 +53,8 @@ class PathFinder:
             pass
 
         self._root = root
-        self.include_exprs: List[str] = []
-        self.exclude_exprs: List[str] = []
+        self.include_exprs: list[str] = []
+        self.exclude_exprs: list[str] = []
 
     def _copy(self: _R, include_exprs: Iterable[str], exclude_exprs: Iterable[str]) -> _R:
         new_copy = self.__class__(self._root)
@@ -108,22 +109,14 @@ class PathFinder:
             return True
 
         posix_path = path.as_posix()
-        for include_expr in self.include_exprs:
-            if fnmatch.fnmatch(posix_path, include_expr):
-                return True
-
-        return False
+        return any(fnmatch.fnmatch(posix_path, include_expr) for include_expr in self.include_exprs)
 
     def _match_exclude(self, path: Path) -> bool:
         if not self.exclude_exprs:
             return False
 
         posix_path = path.as_posix()
-        for exclude_expr in self.exclude_exprs:
-            if fnmatch.fnmatch(posix_path, exclude_expr):
-                return True
-
-        return False
+        return any(fnmatch.fnmatch(posix_path, exclude_expr) for exclude_expr in self.exclude_exprs)
 
     def glob(self, glob_expr: str) -> Iterator[Path]:
         """
@@ -158,19 +151,19 @@ class PathFinder:
 
         relative_target = Path()
         up_path = Path()
-        parents = [self._root] + list(self._root.parents)
+        parents = [self._root, *self._root.parents]
         for parent in parents:
             try:
                 relative_target = target.relative_to(parent)
             except ValueError:
-                up_path = up_path / ".."
+                up_path /= ".."
                 continue
             else:
                 break
 
         return Path(up_path) / relative_target
 
-    def mkdir(self, force: bool = False) -> None:
+    def mkdir(self, *, force: bool = False) -> None:
         """
         Create directories up to `root` if they do not exist.
 
@@ -180,7 +173,7 @@ class PathFinder:
         Raises:
             PathFinderError -- If any existing parent is not a directory and not in `force` mode.
         """
-        parents = [self._root] + list(self._root.parents)
+        parents = [self._root, *list(self._root.parents)]
         missing_parents = []
         for parent in parents:
             if not parent.exists():

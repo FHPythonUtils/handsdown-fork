@@ -1,7 +1,7 @@
 """
 Section in a `SectionMap`.
 """
-from typing import Iterable
+from collections.abc import Iterable
 
 from handsdown.processors.section_block import SectionBlock
 
