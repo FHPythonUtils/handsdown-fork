@@ -1,7 +1,4 @@
-"""
-Utils for strings.
-"""
-from typing import List, Tuple
+"""Utils for strings."""
 
 
 def make_title(file_stem: str) -> str:
@@ -30,12 +27,13 @@ def make_title(file_stem: str) -> str:
 
     Returns:
         A human-readable title as a string.
+
     """
     if file_stem == "__main__":
         return "Module"
 
     parts = file_stem.replace(".", "_").split("_")
-    name_parts: List[str] = []
+    name_parts: list[str] = []
     for part in parts:
         if not part:
             continue
@@ -45,7 +43,7 @@ def make_title(file_stem: str) -> str:
     return " ".join(name_parts)
 
 
-def extract_md_title(content: str) -> Tuple[str, str]:
+def extract_md_title(content: str) -> tuple[str, str]:
     r"""
     Extract title from the first line of content.
 
@@ -63,6 +61,7 @@ def extract_md_title(content: str) -> Tuple[str, str]:
 
     Returns:
         A tuple fo title and remaining content.
+
     """
     title = ""
     if content.startswith("# "):

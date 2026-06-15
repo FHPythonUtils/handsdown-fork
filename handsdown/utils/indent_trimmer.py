@@ -1,6 +1,4 @@
-"""
-Utility for removing indentation for sections and lines.
-"""
+"""Utility for removing indentation for sections and lines."""
 
 from collections.abc import Iterable
 
@@ -8,9 +6,7 @@ __all__ = ["IndentTrimmer"]
 
 
 class IndentTrimmer:
-    """
-    Utility for removing indentation for sections and lines.
-    """
+    """Utility for removing indentation for sections and lines."""
 
     @staticmethod
     def trim_empty_lines(text: str) -> str:
@@ -25,6 +21,7 @@ class IndentTrimmer:
 
         Returns:
             A stripped string.
+
         """
         lines = text.split("\n")
         while lines and not lines[0].strip():
@@ -50,6 +47,7 @@ class IndentTrimmer:
 
         Returns:
             A text with trimmed indent.
+
         """
         new_lines = IndentTrimmer.trim_lines(text.split("\n"))
         return "\n".join(new_lines)
@@ -77,17 +75,14 @@ class IndentTrimmer:
 
         Returns:
             A list of lines with trimmed indent.
+
         """
         indents = [cls.get_line_indent(line) for line in lines if line.strip()]
         min_indent = 0
         if indents:
             min_indent = min(indents)
 
-        new_lines = []
-        for line in lines:
-            new_lines.append(cls.trim_line(line, min_indent))
-
-        return new_lines
+        return [cls.trim_line(line, min_indent) for line in lines]
 
     @staticmethod
     def trim_line(line: str, indent: int) -> str:
@@ -110,6 +105,7 @@ class IndentTrimmer:
 
         Returns:
             A line with removed indent.
+
         """
         if not line[:indent].strip():
             return line[indent:]
@@ -134,6 +130,7 @@ class IndentTrimmer:
 
         Returns:
             A number of indentation characters in a beginning of the line.
+
         """
         return len(line) - len(line.lstrip())
 
@@ -154,6 +151,7 @@ class IndentTrimmer:
 
         Returns:
             An indented line.
+
         """
         line_indent = " " * indent
         return f"{line_indent}{line}"

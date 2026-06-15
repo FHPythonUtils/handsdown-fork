@@ -1,6 +1,4 @@
-"""
-Wrapper for python import strings.
-"""
+"""Wrapper for python import strings."""
 from typing import TypeVar
 
 from handsdown.exceptions import ImportStringError
@@ -14,6 +12,7 @@ class ImportString:
 
     Arguments:
         value -- Import string.
+
     """
 
     def __init__(self, value: str) -> None:
@@ -30,6 +29,7 @@ class ImportString:
 
         Returns:
             Original import string.
+
         """
         return self.value
 
@@ -53,6 +53,7 @@ class ImportString:
 
         Returns:
             A new `ImportString` instance.
+
         """
         if self.value:
             return ImportString(f"{self.value}.{other}")
@@ -73,6 +74,7 @@ class ImportString:
 
         Returns:
             True if not empty.
+
         """
         return bool(self.value)
 
@@ -102,6 +104,7 @@ class ImportString:
 
         Returns:
             True if import strings are equal.
+
         """
         if isinstance(other, str):
             return self.value == other
@@ -126,6 +129,7 @@ class ImportString:
 
         Returns:
             A list of import string parts.
+
         """
         return self.value.split(".")
 
@@ -135,6 +139,7 @@ class ImportString:
 
         Returns:
             True if it has no parents.
+
         """
         return "." not in self.value
 
@@ -145,9 +150,11 @@ class ImportString:
 
         Returns:
             A new `ImportString` instance.
+
         """
         if self.is_top_level():
-            raise ImportStringError("Import string is top level and has no parents.")
+            msg = "Import string is top level and has no parents."
+            raise ImportStringError(msg)
 
         parent_import_string_parts = self.value.split(".")[:-1]
         return self.__class__(".".join(parent_import_string_parts))
@@ -158,6 +165,7 @@ class ImportString:
 
         Returns:
             True if it is a child.
+
         """
         return self.value.startswith(f"{import_string}.")
 
@@ -167,6 +175,7 @@ class ImportString:
 
         Returns:
             A list of `ImportString` instances.
+
         """
         if self.is_top_level():
             return []
@@ -187,12 +196,11 @@ class ImportString:
 
         Returns:
             Length of import string.
+
         """
         return len(self.parts)
 
     @property
     def name(self) -> str:
-        """
-        Last part of the import string.
-        """
+        """Last part of the import string."""
         return self.parts[-1] if self.parts else "empty"

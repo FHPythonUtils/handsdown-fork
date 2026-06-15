@@ -1,18 +1,21 @@
-"""
-Markdown file builder.
-"""
+"""Markdown file builder."""
+from __future__ import annotations
 
 import re
 import traceback
 from pathlib import Path
-from types import TracebackType
-from typing import TypeVar
+from typing import TYPE_CHECKING, TypeVar
+
+from typing_extensions import Self
 
 from handsdown.constants import ENCODING
 from handsdown.utils.indent_trimmer import IndentTrimmer
 from handsdown.utils.path import print_path
 from handsdown.utils.path_finder import PathFinder
 from handsdown.utils.strings import extract_md_title
+
+if TYPE_CHECKING:
+    from types import TracebackType
 
 __all__ = ["MDDocument"]
 
@@ -53,6 +56,7 @@ class MDDocument:
 
     Arguments:
         path -- Path to store document.
+
     """
 
     _anchor_re = re.compile(r"[^a-z0-9_-]+")
@@ -70,7 +74,7 @@ class MDDocument:
         self._encoding = encoding
         self.source_code_url = ""
 
-    def __enter__(self) -> "MDDocument":
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(
@@ -86,9 +90,7 @@ class MDDocument:
 
     @property
     def source_file_name(self) -> str:
-        """
-        Source code file name.
-        """
+        """Source code file name."""
         return self.source_code_url.split("/")[-1]
 
     def read(self, path: Path) -> None:
@@ -98,6 +100,7 @@ class MDDocument:
         Arguments:
             source_path -- Input file path. If not provided - `path` is used.
             encoding -- File encoding.
+
         """
         self._content = path.read_text(encoding=self._encoding)
         self._title = ""
@@ -132,10 +135,10 @@ class MDDocument:
 
         Returns:
             A test of anchor link.
+
         """
         title = title.lower().replace(" ", "-")
-        result = cls._anchor_re.sub("", title)
-        return result
+        return cls._anchor_re.sub("", title)
 
     @staticmethod
     def is_toc(section: str) -> bool:
@@ -144,15 +147,12 @@ class MDDocument:
 
         Returns:
             True the section is ToC.
+
         """
         lines = section.split("\n")
         if len(lines) < 2:
             return False
-        for line in lines:
-            if "- [" not in line:
-                return False
-
-        return True
+        return all("- [" in line for line in lines)
 
     @classmethod
     def render_link(cls, title: str, link: str) -> str:
@@ -173,11 +173,12 @@ class MDDocument:
 
         Returns:
             A string with Markdown link.
+
         """
         return f"[{title}]({link})"
 
     def render_doc_link(
-        self, title: str, anchor: str = "", target_path: Path | None = None
+        self, title: str, anchor: str = "", target_path: Path | None = None,
     ) -> str:
         """
         Render Markdown link to a local MD document, use relative path as a link.
@@ -208,6 +209,7 @@ class MDDocument:
 
         Returns:
             A string with Markdown link.
+
         """
         link = ""
         if target_path and target_path != self._path:
@@ -228,6 +230,7 @@ class MDDocument:
 
         Returns:
             A string with Markdown link.
+
         """
         link = ""
         if path and path != self.path:
@@ -250,18 +253,14 @@ class MDDocument:
         return self._section_separator.join(sections) + "\n"
 
     def write(self) -> None:
-        """
-        Write MD content to `path`.
-        """
+        """Write MD content to `path`."""
         content = self._build_content()
         self.path_finder.mkdir()
         self._path.write_text(content, encoding=self._encoding)
 
     @property
     def title(self) -> str:
-        """
-        `MDDocument` title or an empty string.
-        """
+        """`MDDocument` title or an empty string."""
         return self._title
 
     @title.setter
@@ -271,9 +270,7 @@ class MDDocument:
 
     @property
     def subtitle(self) -> str:
-        """
-        `MDDocument` subtitle or an empty string.
-        """
+        """`MDDocument` subtitle or an empty string."""
         return self._subtitle
 
     @subtitle.setter
@@ -283,9 +280,7 @@ class MDDocument:
 
     @property
     def toc_section(self) -> str:
-        """
-        Document Tree of Contents section or an empty line.
-        """
+        """Document Tree of Contents section or an empty line."""
         return self._toc_section
 
     @toc_section.setter
@@ -295,16 +290,12 @@ class MDDocument:
 
     @property
     def sections(self) -> list[str]:
-        """
-        All non-special `sections` of the document.
-        """
+        """All non-special `sections` of the document."""
         return self._sections
 
     @property
     def path(self) -> Path:
-        """
-        Output path of the document.
-        """
+        """Output path of the document."""
         return self._path
 
     def append(self, content: str) -> None:
@@ -316,6 +307,7 @@ class MDDocument:
 
         Arguments:
             content -- Text to add.
+
         """
         content = IndentTrimmer.trim_empty_lines(content)
         if not content:

@@ -1,3 +1,1 @@
-"""
-AST Analyzers.
-"""
+"""AST Analyzers."""

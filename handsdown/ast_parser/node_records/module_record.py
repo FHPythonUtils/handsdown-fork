@@ -1,8 +1,8 @@
-"""
-Wrapper for an `ast.Module` node with corresponding node info.
-"""
-from collections.abc import Iterator
+"""Wrapper for an `ast.Module` node with corresponding node info."""
+from __future__ import annotations
+
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.module_analyzer import ModuleAnalyzer
@@ -11,10 +11,14 @@ from handsdown.ast_parser.node_records.class_record import ClassRecord
 from handsdown.ast_parser.node_records.function_record import FunctionRecord
 from handsdown.ast_parser.node_records.import_record import ImportRecord
 from handsdown.ast_parser.node_records.node_record import NodeRecord
-from handsdown.ast_parser.type_defs import RenderExpr
 from handsdown.constants import ENCODING
 from handsdown.utils.import_string import ImportString
 from handsdown.utils.indent_trimmer import IndentTrimmer
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from handsdown.ast_parser.type_defs import RenderExpr
 
 
 class ModuleRecord(NodeRecord):
@@ -25,6 +29,7 @@ class ModuleRecord(NodeRecord):
 
     Arguments:
         node -- Result of `ast.parse`.
+
     """
 
     def __init__(self, node: ast.Module) -> None:
@@ -47,7 +52,7 @@ class ModuleRecord(NodeRecord):
         source_path: Path,
         import_string: ImportString,
         encoding: str = ENCODING,
-    ) -> "ModuleRecord":
+    ) -> ModuleRecord:
         """
         Create new `ModuleRecord` from path.
 
@@ -58,6 +63,7 @@ class ModuleRecord(NodeRecord):
 
         Returns:
             New `ModuleRecord` instance.
+
         """
         content = source_path.read_text(encoding=encoding)
         node = ast.parse(content)
@@ -78,6 +84,7 @@ class ModuleRecord(NodeRecord):
 
         Returns:
             Found child record on None.
+
         """
         if import_string == self.import_string:
             return self
@@ -94,6 +101,7 @@ class ModuleRecord(NodeRecord):
 
         Yields:
             A child record.
+
         """
         for class_record in self.class_records:
             if self.all_names and class_record.name not in self.all_names:
@@ -203,6 +211,7 @@ class ModuleRecord(NodeRecord):
 
         Returns:
             Function definition lines as an array.
+
         """
         assert isinstance(function_record.node, (ast.AsyncFunctionDef, ast.FunctionDef))
         function_record_node: ast.FunctionDef = function_record.node  # type: ignore
@@ -212,8 +221,7 @@ class ModuleRecord(NodeRecord):
         end_index = function_record_node.body[0].lineno - 1
         result = self.source_lines[start_index:end_index]
         result = [i.rstrip("\n") for i in result]
-        result = IndentTrimmer.trim_lines(result)
-        return result
+        return IndentTrimmer.trim_lines(result)
 
     def _get_comment_docstring(self, node_record: NodeRecord) -> str:
         """
@@ -226,6 +234,7 @@ class ModuleRecord(NodeRecord):
 
         Returns:
             A docstring as a string.
+
         """
         assert isinstance(node_record.node, (ast.Assign, ast.AnnAssign))
 
@@ -253,6 +262,7 @@ class ModuleRecord(NodeRecord):
 
         Returns:
             A set of absolute import strings found.
+
         """
         result: set[ImportString] = set()
         related_names = node_record.related_names
@@ -283,5 +293,6 @@ class ModuleRecord(NodeRecord):
 
         Returns:
             True if this module is the __init__.py file.
+
         """
         return self.source_path.name == "__init__.py"

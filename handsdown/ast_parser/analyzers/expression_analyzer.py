@@ -1,6 +1,4 @@
-"""
-AST analyzer for `ast.expr` records.
-"""
+"""AST analyzer for `ast.expr` records."""
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.base_analyzer import BaseAnalyzer
@@ -75,6 +73,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         value = node.value
         if isinstance(value, bytes):
@@ -91,6 +90,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.id)
         self.related_names.append(node.id)
@@ -108,6 +108,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.value)
         self.parts.append("[")
@@ -129,6 +130,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.value)
         self.parts.append(".")
@@ -149,6 +151,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         if node.elts:
             for index, element in enumerate(node.elts):
@@ -175,6 +178,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("[")
         self._visit_iterable(node)
@@ -190,6 +194,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         self._visit_iterable(node)
@@ -205,6 +210,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("(")
         self._visit_iterable(node)
@@ -216,6 +222,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.func)
         self.parts.append("(")
@@ -254,6 +261,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("*")
         self.parts.append(node.value)
@@ -269,6 +277,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         if not node.arg:
             self.parts.append("**")
@@ -285,6 +294,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         for index, key in enumerate(node.keys or []):
@@ -308,6 +318,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.left)
         for index, right in enumerate(node.comparators):
@@ -331,6 +342,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.left)
         self.parts.append(" ")
@@ -352,6 +364,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         operator = self.BOOLOP_SYMBOLS.get(type(node.op), self.UNKNOWN)
         if operator == self.UNKNOWN:
@@ -376,6 +389,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         operator = self.UNARYOP_SYMBOLS.get(type(node.op), self.UNKNOWN)
         if operator == self.UNKNOWN:
@@ -395,6 +409,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("lambda ")
         self.parts.append(node.args)
@@ -411,6 +426,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         arg_count = 0
         for index, arg in enumerate(node.args):
@@ -455,6 +471,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.arg)
         if node.annotation:
@@ -472,6 +489,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         if isinstance(node.value, ast.Tuple):  # type: ignore
             self._visit_iterable(node.value)  # type: ignore
@@ -492,6 +510,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         if node.lower:
             self.parts.append(node.lower)
@@ -512,6 +531,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("f'")
         for value in node.values:
@@ -534,6 +554,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         self.parts.append(node.value)
@@ -549,6 +570,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("for ")
         self.parts.append(node.target)
@@ -568,6 +590,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         self.parts.append(node.key)
@@ -588,6 +611,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("[")
         self.parts.append(node.elt)
@@ -606,6 +630,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         self.parts.append(node.elt)
@@ -624,6 +649,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("(")
         self.parts.append(node.elt)
@@ -642,6 +668,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.body)
         self.parts.append(" if ")
@@ -659,6 +686,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("await ")
         self.parts.append(node.value)
@@ -674,6 +702,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("yield")
         if node.value:
@@ -690,6 +719,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("yield from ")
         self.parts.append(node.value)
@@ -702,8 +732,9 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self._logger.warning(
-            f"Could not render node {node.__class__.__name__}, replaced with `{self.UNKNOWN}`"
+            f"Could not render node {node.__class__.__name__}, replaced with `{self.UNKNOWN}`",
         )
         self.parts.append(self.UNKNOWN)

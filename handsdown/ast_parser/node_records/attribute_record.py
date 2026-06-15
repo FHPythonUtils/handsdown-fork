@@ -1,11 +1,14 @@
-"""
-Wrapper for an `ast.Assign` node of a module or class attribute.
-"""
+"""Wrapper for an `ast.Assign` node of a module or class attribute."""
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.node_records.expression_record import ExpressionRecord
 from handsdown.ast_parser.node_records.node_record import NodeRecord
-from handsdown.ast_parser.type_defs import RenderExpr
+
+if TYPE_CHECKING:
+    from handsdown.ast_parser.type_defs import RenderExpr
 
 
 class AttributeRecord(NodeRecord):
@@ -14,6 +17,7 @@ class AttributeRecord(NodeRecord):
 
     Arguments:
         node -- AST node.
+
     """
 
     def __init__(self, node: ast.Assign | ast.AnnAssign) -> None:
@@ -30,9 +34,7 @@ class AttributeRecord(NodeRecord):
 
     @property
     def related_names(self) -> set[str]:
-        """
-        Set of related names.
-        """
+        """Set of related names."""
         result = set()
         if self.value:
             result.update(self.value.related_names)
@@ -43,8 +45,7 @@ class AttributeRecord(NodeRecord):
         parts: list[RenderExpr] = []
         parts.append(self.name)
         if self.value is not None:
-            parts.append(" = ")
-            parts.append(self.value)
+            parts.extend((" = ", self.value))
         return parts
 
     def _parse(self) -> None:
@@ -52,9 +53,7 @@ class AttributeRecord(NodeRecord):
             self.value.parse()
 
     def render(self) -> str:
-        """
-        Render attribute with docstring.
-        """
+        """Render attribute with docstring."""
         result = [f"`{self.name}`"]
         if self.annotation:
             result.append(f": `{self.annotation.render()}`")
@@ -66,7 +65,5 @@ class AttributeRecord(NodeRecord):
         return "".join(result)
 
     def append_to(self, node_record: NodeRecord) -> None:
-        """
-        Append AttributeRecord to NodeRecord.
-        """
+        """Append AttributeRecord to NodeRecord."""
         node_record.attribute_records.append(self)

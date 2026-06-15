@@ -1,6 +1,4 @@
-"""
-Base class for all node records.
-"""
+"""Base class for all node records."""
 from abc import abstractmethod
 from collections.abc import Iterable
 
@@ -11,9 +9,7 @@ from handsdown.utils.import_string import ImportString
 
 
 class NodeRecord:
-    """
-    Base class for all node records.
-    """
+    """Base class for all node records."""
 
     def __init__(self, node: ast.AST) -> None:
         self.docstring = ""
@@ -36,6 +32,7 @@ class NodeRecord:
 
         Returns:
             A line number startign with 1.
+
         """
         if self._line_number is None:
             if isinstance(self.node, str):
@@ -74,6 +71,7 @@ class NodeRecord:
 
         Returns:
             A set of referenced object name.
+
         """
         return set()
 
@@ -111,6 +109,7 @@ class NodeRecord:
 
         Returns:
             A string representation of `node`.
+
         """
         if not self.parsed:
             self.parse()
@@ -143,6 +142,7 @@ class NodeRecord:
 
         Returns:
             A list of rendered strings.
+
         """
         result = []
         for record in self.attribute_records:
@@ -155,7 +155,5 @@ class NodeRecord:
 
     @property
     def class_name(self) -> str:
-        """
-        Record class name.
-        """
+        """Record class name."""
         return self.__class__.__name__

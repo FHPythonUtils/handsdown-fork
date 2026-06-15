@@ -1,20 +1,17 @@
-"""
-Main handsdown documentation generator.
-"""
+"""Main handsdown documentation generator."""
+from __future__ import annotations
+
 import re
-from collections.abc import Iterable
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from handsdown.ast_parser.module_record_list import ModuleRecordList
 from handsdown.ast_parser.node_records.attribute_record import AttributeRecord
-from handsdown.ast_parser.node_records.module_record import ModuleRecord
-from handsdown.ast_parser.node_records.node_record import NodeRecord
 from handsdown.constants import ENCODING
 from handsdown.exceptions import GeneratorError, LoaderError
 from handsdown.jinja_manager import JinjaManager
 from handsdown.loader import Loader
 from handsdown.md_document import MDDocument
-from handsdown.processors.base import BaseDocstringProcessor
 from handsdown.processors.smart import SmartDocstringProcessor
 from handsdown.utils.import_string import ImportString
 from handsdown.utils.logger import get_logger
@@ -22,6 +19,13 @@ from handsdown.utils.markdown import insert_md_toc
 from handsdown.utils.path import print_path
 from handsdown.utils.path_finder import PathFinder
 from handsdown.utils.strings import make_title
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from handsdown.ast_parser.node_records.module_record import ModuleRecord
+    from handsdown.ast_parser.node_records.node_record import NodeRecord
+    from handsdown.processors.base import BaseDocstringProcessor
 
 
 class BaseGenerator:
@@ -41,6 +45,7 @@ class BaseGenerator:
         source_code_path -- Path to local source code
         toc_depth -- Maximum depth of child modules ToC
         encoding -- File encoding
+
     """
 
     # Index filename
@@ -139,9 +144,7 @@ class BaseGenerator:
         return module_record_list
 
     def cleanup_old_docs(self) -> None:
-        """
-        Remove old docs generated for this module.
-        """
+        """Remove old docs generated for this module."""
         self._logger.debug("Removing orphaned docs")
         preserve_paths = {self.get_md_document(i).path for i in self.module_records}
         orphaned_dirs: list[Path] = []
@@ -177,6 +180,7 @@ class BaseGenerator:
 
         Raises:
             GeneratorError -- If `source_path` not found in current repo.
+
         """
         for module_record in self.module_records:
             if module_record.source_path != source_path:
@@ -186,7 +190,8 @@ class BaseGenerator:
 
             return
 
-        raise GeneratorError(f"Record not found for {source_path}")
+        msg = f"Record not found for {source_path}"
+        raise GeneratorError(msg)
 
     def _get_source_code_url(self, module_record: ModuleRecord, md_document: MDDocument) -> str:
         if not self._source_code_url:
@@ -197,12 +202,10 @@ class BaseGenerator:
         return f"{self._source_code_url}{relative_path_str}"
 
     def get_md_document(self, module_record: ModuleRecord) -> MDDocument:
-        """
-        Get or create MDDocument for module record.
-        """
+        """Get or create MDDocument for module record."""
         if module_record.source_path not in self._md_document_map:
             self._md_document_map[module_record.source_path] = MDDocument(
-                self._loader._get_output_path(module_record.source_path), encoding=self._encoding
+                self._loader._get_output_path(module_record.source_path), encoding=self._encoding,
             )
         return self._md_document_map[module_record.source_path]
 
@@ -210,7 +213,7 @@ class BaseGenerator:
         md_document = self.get_md_document(module_record)
         self._logger.debug(
             f"Generating doc {print_path(md_document.path)}"
-            f" for {print_path(module_record.source_path)}"
+            f" for {print_path(module_record.source_path)}",
         )
         try:
             self._loader.parse_module_record(module_record)
@@ -235,15 +238,13 @@ class BaseGenerator:
         if self._write_changed(md_document.path, content):
             self._logger.info(
                 f"Updated doc {print_path(md_document.path)}"
-                f" for {print_path(module_record.source_path)}"
+                f" for {print_path(module_record.source_path)}",
             )
 
     def generate_docs(self) -> None:
-        """
-        Generate all doc files at once.
-        """
+        """Generate all doc files at once."""
         self._logger.debug(
-            f"Generating docs for {self._project_name} to {print_path(self._output_path)}"
+            f"Generating docs for {self._project_name} to {print_path(self._output_path)}",
         )
 
         for module_record in self.module_records:
@@ -299,7 +300,7 @@ class BaseGenerator:
             if not related_record:
                 related_import_string = ImportString(related_record_name)
                 related_module_record = self.module_records.find_module_record(
-                    related_import_string
+                    related_import_string,
                 )
                 if related_module_record:
                     related_record = related_module_record.find_record(related_import_string)
@@ -316,7 +317,7 @@ class BaseGenerator:
             anchor = md_document.get_anchor(related_record.title)
             if isinstance(related_record, AttributeRecord):
                 parent_related_record = module_record.find_record(
-                    related_record.import_string.parent
+                    related_record.import_string.parent,
                 )
                 if parent_related_record:
                     anchor = md_document.get_anchor(parent_related_record.title)
@@ -332,9 +333,7 @@ class BaseGenerator:
         module_record: ModuleRecord,
         md_document: MDDocument,
     ) -> list[str]:
-        """
-        Get links to other modules that are referenced in the docstring.
-        """
+        """Get links to other modules that are referenced in the docstring."""
         related_import_strings = module_record.get_related_import_strings(record)
         links = set()
         for import_string in related_import_strings:
@@ -361,9 +360,7 @@ class BaseGenerator:
         return sorted(links)
 
     def get_external_configs_templates(self) -> tuple[tuple[Path, Path], ...]:
-        """
-        Get a tuple with pairs of template path to project path
-        """
+        """Get a tuple with pairs of template path to project path."""
         return (
             (
                 self.common_templates_path / "gh_pages_config.yml.jinja2",
@@ -378,8 +375,7 @@ class BaseGenerator:
 
     def _get_output_path_str(self) -> str:
         result = str(self._output_path.relative_to(self._root_path))
-        result = result.removeprefix("./")
-        return result
+        return result.removeprefix("./")
 
     def _get_main_source_code_url(self) -> str:
         result = self._source_code_url or ""
@@ -388,9 +384,7 @@ class BaseGenerator:
         return result
 
     def _write_changed(self, path: Path, content: str) -> bool:
-        """
-        Write content to file if it's changed.
-        """
+        """Write content to file if it's changed."""
         if path.exists() and path.read_text(self._encoding) == content:
             return False
 
@@ -411,9 +405,7 @@ class BaseGenerator:
                 self._logger.info(f"Updated config {print_path(output_path)}")
 
     def get_children_module_records(self, parent: ModuleRecord) -> list[ModuleRecord]:
-        """
-        Get all module records that are children of this module.
-        """
+        """Get all module records that are children of this module."""
         result = []
         for module_record in self.module_records:
             if module_record.import_string.is_top_level():

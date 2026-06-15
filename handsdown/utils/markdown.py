@@ -1,6 +1,4 @@
-"""
-Utils for markdown rendering.
-"""
+"""Utils for markdown rendering."""
 from collections.abc import Iterable
 from typing import TypeVar
 
@@ -15,6 +13,7 @@ class Header:
         title -- Header title
         level -- Header level, 1-6
         anchor -- Anchor link
+
     """
 
     def __init__(self, title: str, level: int, anchor: str) -> None:
@@ -23,9 +22,7 @@ class Header:
         self.anchor: str = anchor
 
     def render(self) -> str:
-        """
-        Render menu item to string.
-        """
+        """Render menu item to string."""
         indent = "  " * (self.level - 1)
         return f"{indent}- [{self.title}](#{self.anchor})"
 
@@ -36,6 +33,7 @@ class TableOfContents:
 
     Arguments:
         headers -- List of headers
+
     """
 
     def __init__(self, headers: Iterable[Header]) -> None:
@@ -48,6 +46,7 @@ class TableOfContents:
 
         Arguments:
             text -- MarkDown text.
+
         """
         headers: list[Header] = []
         in_codeblock = False
@@ -70,9 +69,7 @@ class TableOfContents:
         return cls(headers)
 
     def render(self, max_level: int = 3) -> str:
-        """
-        Render ToC to string.
-        """
+        """Render ToC to string."""
         result: list[str] = []
         for header in self.headers:
             if header.level > max_level:
@@ -86,9 +83,7 @@ class TableOfContents:
 
 
 def insert_md_toc(text: str, depth: int = 3) -> str:
-    """
-    Insert Table of Contents before the first second-level header.
-    """
+    """Insert Table of Contents before the first second-level header."""
     toc = TableOfContents.parse(text)
     toc_lines = toc.render(depth).splitlines()
     lines = text.splitlines()

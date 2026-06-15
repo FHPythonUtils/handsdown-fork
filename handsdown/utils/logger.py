@@ -1,6 +1,6 @@
-"""
-Utilities for stdout stream logger.
-"""
+"""Utilities for stdout stream logger."""
+from __future__ import annotations
+
 import logging
 
 from handsdown.constants import LOGGER_NAME
@@ -15,6 +15,7 @@ def get_logger(level: int | None = None) -> logging.Logger:
 
     Returns:
         A `logging.Logger` instance.
+
     """
     logger = logging.getLogger(LOGGER_NAME)
     if level is not None:

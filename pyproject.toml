@@ -32,19 +32,20 @@ dependencies = [
     "importlib-resources",
     "jinja2",
     "black",
+    "basedpyright>=1.39.8",
 ]
 
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "ruff",
     "mypy",
-    "pyright",
     "pytest-cov",
     "pytest",
     "types-setuptools"
 ]
-package = true
+
+
 
 [build-system]
 requires = ['setuptools']
@@ -103,32 +104,16 @@ target-version = "py39"
 preview = true
 select = ["ALL"]
 ignore = [
-    "PYI",
-    "ARG002",  # unused-argument
-    "COM812",  # missing-trailing-comma
-    "D107",    # undocumented-public-init
-    "D200",    # fits-on-one-line
-    "D203",    # one-blank-line-before-class
-    "D212",    # multi-line-summary-first-line
-    "D406",    # new-line-after-section-name
-    "D407",    # dashed-underline-after-section
-    "D413",    # blank-line-after-last-section
-    "D417",    # undocumented-param
-    "DOC",     # pydoclint
-    "EM",      # flake8-errmsg
-    "ERA001",  # commented-out-code
-    "FIX001",  # line-contains-fixme
-    "G004",    # logging-f-string
-    "INP001",  # implicit-namespace-package
-    "ISC001",  # implicit-str-concat
-    "PERF203", # try-except-in-loop
-    "PLR0904", # too-many-public-methods
-    "PLR0913", # too-many-arguments
-    "PLR6301", # no-self-use
-    "S404",    # suspicious-subprocess-import
-    "S603",    # subprocess-without-shell-equals-true
-    "TD",      # flake8-todos
-    "TRY003",  # raise-vanilla-args
+	"COM812", # enforce trailing comma
+	"D203",     # 
+	"D212",     #  
+	"D206",     # i want tabs 
+	"D401",     # imperative mood
+	"D1",     # temporarily ignore docstrings
+	"ISC001",
+	"TCH",    # type check blocks
+	"W191",   # ignore this to allow tabs
+	"EXE002", # The file is executable but no shebang is present
 ]
 fixable = ["ALL"]
 unfixable = ["B"]
@@ -163,12 +148,12 @@ line-ending = "lf"
 docstring-code-format = false
 docstring-code-line-length = "dynamic"
 
-[tool.ruff.lint.flake8-copyright]
-# author = "Vlad Emelianov"
-min-file-size = 200
-notice-rgx = "(?i)Copyright \\d{4}"
 
-[tool.pyright]
+[tool.basedpyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "standard"
+
 include = ["handsdown"]
 exclude = ["**/__pycache__", "tests", "typestubs"]
 reportMissingImports = true
@@ -177,4 +162,5 @@ reportMissingTypeArgument = "error"
 reportIncompatibleMethodOverride = "error"
 reportIncompatibleVariableOverride = "error"
 reportUnknownParameterType = "error"
-pythonVersion = "3.9"
+# pythonVersion = "3.9"
+

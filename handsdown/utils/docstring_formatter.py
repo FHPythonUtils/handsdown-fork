@@ -1,6 +1,4 @@
-"""
-Translator of docstrings to Markdown format.
-"""
+"""Translator of docstrings to Markdown format."""
 from handsdown.utils.indent_trimmer import IndentTrimmer
 
 __all__ = ["DocstringFormatter"]
@@ -12,6 +10,7 @@ class DocstringFormatter:
 
     Arguments:
         docstring -- Raw docstring.
+
     """
 
     def __init__(self, docstring: str) -> None:
@@ -31,6 +30,7 @@ class DocstringFormatter:
 
         Returns:
             Aligned docstring.
+
         """
         if "\n" in docstring and docstring[0] != "\n":
             lines = docstring.split("\n")
@@ -60,6 +60,7 @@ class DocstringFormatter:
 
         Returns:
             A cleaned up docstring.
+
         """
         self._parse_flask_title()
         return "\n".join(self._lines)

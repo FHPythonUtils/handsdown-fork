@@ -1,6 +1,4 @@
-"""
-Different AST-related types collection.
-"""
+"""Different AST-related types collection."""
 from typing import TYPE_CHECKING, Union
 
 import handsdown.ast_parser.smart_ast as ast

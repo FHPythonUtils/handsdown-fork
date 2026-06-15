@@ -1,6 +1,4 @@
-"""
-Jinja2 `Environment` manager.
-"""
+"""Jinja2 `Environment` manager."""
 from pathlib import Path
 from typing import Any
 
@@ -11,9 +9,7 @@ from handsdown.utils.blackify import blackify
 
 
 class JinjaManager:
-    """
-    Jinja2 `Environment` manager.
-    """
+    """Jinja2 `Environment` manager."""
 
     TEMPLATES_PATH = Path(__file__).parent / "templates"
 
@@ -32,35 +28,31 @@ class JinjaManager:
 
         Arguments:
             kwargs -- Globals to set.
+
         """
         cls._env.globals.update(kwargs)
 
     @staticmethod
     def escape_md(value: str) -> str:
-        """
-        Escape underscore characters.
-        """
+        """Escape underscore characters."""
         return value.replace("_", r"\_")
 
     @property
     def env(self) -> jinja2.Environment:
-        """
-        Get `jinja2.Environment`.
-        """
+        """Get `jinja2.Environment`."""
         return self._env
 
     @staticmethod
     def trim_eof(value: str) -> str:
-        """
-        Trim EOF newlines and add one newline.
-        """
+        """Trim EOF newlines and add one newline."""
         return value.rstrip("\n") + "\n"
 
     def render(self, template_path: Path, **kwargs: Any) -> str:
         template_full_path = self.TEMPLATES_PATH / template_path
 
         if not template_full_path.exists():
-            raise LoaderError(f"Template {template_full_path} not found")
+            msg = f"Template {template_full_path} not found"
+            raise LoaderError(msg)
 
         template = self.env.get_template(template_path.as_posix())
         result = template.render(**kwargs)

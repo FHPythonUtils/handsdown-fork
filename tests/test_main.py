@@ -30,7 +30,7 @@ class TestMain:
         generator_mock.assert_called_once_with(
             input_path=Path("/"),
             output_path=Path("/output-path"),
-            project_name="Handsdown",
+            project_name="Handsdown-fork",
             raise_errors=False,
             source_code_url="",
             source_code_path=Path(),

@@ -1,6 +1,4 @@
-"""
-Module for splitting docstring into `Section` groups.
-"""
+"""Module for splitting docstring into `Section` groups."""
 from collections.abc import Iterator
 
 from handsdown.processors.section import Section
@@ -30,6 +28,7 @@ class SectionMap:
         Arguments:
             section_name -- Target section title
             line -- Line to add
+
         """
         if section_name in self.sections:
             section = self.sections[section_name]
@@ -48,6 +47,7 @@ class SectionMap:
         Arguments:
             section_name -- Target section title
             line -- Line to add
+
         """
         if section_name not in self.sections:
             if not line:
@@ -70,6 +70,7 @@ class SectionMap:
 
         Arguments:
             section_name -- Target section title
+
         """
         if section_name not in self.sections:
             return
@@ -84,6 +85,7 @@ class SectionMap:
 
         Arguments:
             section_name -- Target section title.
+
         """
         if section_name not in self.sections:
             return
@@ -98,6 +100,7 @@ class SectionMap:
 
         Yields:
             `Section` objects in order of appearance.
+
         """
         for section_name in self._order:
             section = self.sections[section_name]

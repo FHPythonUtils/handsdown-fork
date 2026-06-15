@@ -1,6 +1,4 @@
-"""
-Various project constants.
-"""
+"""Various project constants."""
 import enum
 
 # Package name.

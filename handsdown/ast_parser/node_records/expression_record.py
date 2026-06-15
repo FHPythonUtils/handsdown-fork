@@ -1,6 +1,4 @@
-"""
-Wrapper for an `ast.expr` node.
-"""
+"""Wrapper for an `ast.expr` node."""
 import re
 
 import handsdown.ast_parser.smart_ast as ast
@@ -15,6 +13,7 @@ class ExpressionRecord(NodeRecord):
 
     Arguments:
         node -- AST node.
+
     """
 
     _str_split_re = re.compile(r"[\]\[ ,]")
@@ -26,9 +25,7 @@ class ExpressionRecord(NodeRecord):
 
     @property
     def related_names(self) -> set[str]:
-        """
-        Set of related names.
-        """
+        """Set of related names."""
         return set(self.analyzer.related_names)
 
     def _parse(self) -> None:
@@ -51,9 +48,7 @@ class ExpressionRecord(NodeRecord):
         return result
 
     def render_str(self) -> str:
-        """
-        Render expression to a string.
-        """
+        """Render expression to a string."""
         self.parse()
         result = []
         for part in self._render_parts():

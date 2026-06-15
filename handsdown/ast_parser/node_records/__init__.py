@@ -1,3 +1,1 @@
-"""
-Wrappers for AST nodes.
-"""
+"""Wrappers for AST nodes."""

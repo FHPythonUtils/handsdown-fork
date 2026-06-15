@@ -1,15 +1,11 @@
-"""
-Read the Docs documentation generator.
-"""
+"""Read the Docs documentation generator."""
 from pathlib import Path
 
 from handsdown.generators.base import BaseGenerator
 
 
 class MaterialGenerator(BaseGenerator):
-    """
-    Read the Docs documentation generator.
-    """
+    """Read the Docs documentation generator."""
 
     templates_path = Path("material")
     module_template_path = templates_path / "module.md.jinja2"
@@ -17,9 +13,7 @@ class MaterialGenerator(BaseGenerator):
     insert_toc = False
 
     def get_external_configs_templates(self) -> tuple[tuple[Path, Path], ...]:
-        """
-        Get a tuple with pairs of template path to project path
-        """
+        """Get a tuple with pairs of template path to project path."""
         return (
             *super().get_external_configs_templates(),
             (

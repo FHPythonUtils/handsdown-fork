@@ -1,6 +1,4 @@
-"""
-AST analyzer for `ast.Module` records.
-"""
+"""AST analyzer for `ast.Module` records."""
 
 from typing import Union
 
@@ -10,9 +8,7 @@ from handsdown.ast_parser.type_defs import ASTFunctionDef, ASTImport
 
 
 class ModuleAnalyzer(BaseAnalyzer):
-    """
-    AST analyzer for `ast.Module` records.
-    """
+    """AST analyzer for `ast.Module` records."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -37,6 +33,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.import_nodes.append(node)
 
@@ -53,6 +50,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.import_nodes.append(node)
 
@@ -71,6 +69,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         name = node.name
         docstring = self.get_docstring(node)
@@ -107,6 +106,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         return self._visit_FunctionDef(node)
 
@@ -125,6 +125,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         return self._visit_FunctionDef(node)
 
@@ -153,6 +154,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         # skip multiple assignments
         if len(node.targets) != 1:
@@ -193,6 +195,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         # skip complex assignments
         if not isinstance(node.target, ast.Name):

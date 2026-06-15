@@ -1,6 +1,4 @@
-"""
-Main module entrypoint.
-"""
+"""Main module entrypoint."""
 from handsdown.main import main
 
 if __name__ == "__main__":

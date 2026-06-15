@@ -1,6 +1,4 @@
-"""
-Section in a `SectionMap`.
-"""
+"""Section in a `SectionMap`."""
 from collections.abc import Iterable
 
 from handsdown.processors.section_block import SectionBlock
@@ -13,6 +11,7 @@ class Section:
     Arguments:
         title -- Section title.
         blocks -- List of line blocks.
+
     """
 
     def __init__(self, title: str, blocks: Iterable[SectionBlock]) -> None:
@@ -25,10 +24,9 @@ class Section:
 
         Returns:
             Section lines as a text.
+
         """
-        result = []
-        for block in self.iterate_blocks():
-            result.append(block.render())
+        result = [block.render() for block in self.iterate_blocks()]
 
         return "\n\n".join(result)
 
@@ -38,6 +36,7 @@ class Section:
 
         Returns:
             Section block lines.
+
         """
         for block in self.blocks:
             if block.lines:

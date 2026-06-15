@@ -1,11 +1,14 @@
-"""
-Wrapper for an `ast.Import` and `ast.ImportFrom` nodes.
-"""
+"""Wrapper for an `ast.Import` and `ast.ImportFrom` nodes."""
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.node_records.node_record import NodeRecord
-from handsdown.ast_parser.type_defs import ASTImport, RenderExpr
 from handsdown.utils.import_string import ImportString
+
+if TYPE_CHECKING:
+    from handsdown.ast_parser.type_defs import ASTImport, RenderExpr
 
 
 class ImportRecord(NodeRecord):
@@ -15,6 +18,7 @@ class ImportRecord(NodeRecord):
     Arguments:
         node -- AST node.
         alias -- AST node with import alias.
+
     """
 
     def __init__(self, node: ASTImport, alias: ast.alias) -> None:
@@ -34,6 +38,7 @@ class ImportRecord(NodeRecord):
 
         Returns:
             An absolute import string.
+
         """
         if self.source:
             return ImportString(self.source) + self.name
@@ -75,15 +80,15 @@ class ImportRecord(NodeRecord):
 
         Returns:
             True if name is imported object itself on one of his children.
+
         """
         if name == self.local_name:
             return self.get_import_string()
 
         lookup = f"{self.local_name}."
-        if name.startswith(lookup):
-            if self.source:
-                trailing_import = name[len(lookup) :]
-                return ImportString(f"{self.get_import_string()}.{trailing_import}")
+        if name.startswith(lookup) and self.source:
+            trailing_import = name[len(lookup) :]
+            return ImportString(f"{self.get_import_string()}.{trailing_import}")
 
         return None
 

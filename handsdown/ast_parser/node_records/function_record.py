@@ -1,16 +1,17 @@
-"""
-Wrapper for an `ast.FunctionDef` node.
-"""
+"""Wrapper for an `ast.FunctionDef` node."""
 import re
 from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.function_analyzer import FunctionAnalyzer
-from handsdown.ast_parser.node_records.argument_record import ArgumentRecord
 from handsdown.ast_parser.node_records.expression_record import ExpressionRecord
 from handsdown.ast_parser.node_records.node_record import NodeRecord
 from handsdown.ast_parser.node_records.text_record import TextRecord
 from handsdown.ast_parser.type_defs import ASTFunctionDef, RenderExpr
+
+if TYPE_CHECKING:
+    from handsdown.ast_parser.node_records.argument_record import ArgumentRecord
 
 
 class FunctionRecord(NodeRecord):
@@ -19,6 +20,7 @@ class FunctionRecord(NodeRecord):
 
     Arguments:
         node -- AST node.
+
     """
 
     _single_type_re = re.compile(r".+#\s*type:\s*(.+)")
@@ -39,9 +41,7 @@ class FunctionRecord(NodeRecord):
 
     @property
     def related_names(self) -> set[str]:
-        """
-        Set of related names.
-        """
+        """Set of related names."""
         result: set[str] = set()
         for decorator_record in self.decorator_records:
             result.update(decorator_record.related_names)
@@ -91,8 +91,7 @@ class FunctionRecord(NodeRecord):
 
             result[-1] = f"{result[-1]}{c}"
 
-        result = [i.strip() for i in result if i.strip() and i.strip() != "..."]
-        return result
+        return [i.strip() for i in result if i.strip() and i.strip() != "..."]
 
     def parse_type_comments(self, lines: Iterable[str]) -> None:
         """
@@ -138,7 +137,5 @@ class FunctionRecord(NodeRecord):
         return [f"def {self.name}()"]
 
     def is_init(self) -> bool:
-        """
-        Returns True if function is an __init__ method.
-        """
+        """Returns True if function is an __init__ method."""
         return self.name == "__init__"
