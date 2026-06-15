@@ -1,3 +1,1 @@
-"""
-Handful utils.
-"""
+"""Handful utils."""

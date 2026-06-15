@@ -1,7 +1,4 @@
-"""
-Base AST analyzer.
-"""
-from typing import List
+"""Base AST analyzer."""
 
 import handsdown.ast_parser.smart_ast as ast
 
@@ -14,7 +11,7 @@ class BaseAnalyzer(ast.NodeVisitor):
     """
 
     def __init__(self) -> None:
-        self.related_names: List[str] = []
+        self.related_names: list[str] = []
 
     def get_docstring(self, node: ast.AST) -> str:
         """
@@ -25,6 +22,7 @@ class BaseAnalyzer(ast.NodeVisitor):
 
         Returns:
             Docstring.
+
         """
         if isinstance(node, (ast.AsyncFunctionDef, ast.FunctionDef, ast.ClassDef, ast.Module)):
             return ast.get_docstring(node, clean=False) or ""

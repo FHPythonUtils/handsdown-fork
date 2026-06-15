@@ -8,27 +8,10 @@ from handsdown.md_document import MDDocument
 
 class TestMDDocument:
     def test_init(self):
-        with NamedTemporaryFile(mode="w+") as temp_f:
+        with NamedTemporaryFile(mode="w+", encoding="utf-8") as temp_f:
             temp_f.write(
-                "\n".join(
-                    [
-                        "# my title",
-                        "",
-                        "subtitle",
-                        "",
-                        "",
-                        "",
-                        "subtitle2",
-                        "",
-                        "- [TOC](#toc)",
-                        "- [TOC2](#toc2)",
-                        "",
-                        "## my title 2",
-                        "",
-                        "some content",
-                        "new line",
-                    ]
-                )
+                "# my title\n\nsubtitle\n\n\n\nsubtitle2\n\n- [TOC](#toc)\n-"
+                " [TOC2](#toc2)\n\n## my title 2\n\nsome content\nnew line"
             )
             temp_f.flush()
             md_doc = MDDocument(Path(temp_f.name))
@@ -44,19 +27,9 @@ class TestMDDocument:
         md_doc.subtitle = "my subtitle"
         assert md_doc.subtitle == "my subtitle"
 
-        with NamedTemporaryFile(mode="w+") as temp_f:
+        with NamedTemporaryFile(mode="w+", encoding="utf-8") as temp_f:
             temp_f.write(
-                "\n".join(
-                    [
-                        "# my title",
-                        "",
-                        "- [TOC](#toc)",
-                        "- [TOC2](#toc2)",
-                        "",
-                        "",
-                        "some content",
-                    ]
-                )
+                "# my title\n\n- [TOC](#toc)\n- [TOC2](#toc2)\n\n\nsome content"
             )
             temp_f.flush()
             md_doc = MDDocument(Path(temp_f.name))
@@ -65,15 +38,14 @@ class TestMDDocument:
         assert md_doc.subtitle == "some content"
 
     def test_context_manager(self):
-        with NamedTemporaryFile(mode="w+") as temp_f:
+        with NamedTemporaryFile(mode="w+", encoding="utf-8") as temp_f:
             with MDDocument(Path(temp_f.name)) as md_doc:
                 md_doc.title = "test"
 
             assert temp_f.read() == "# test\n"
 
-        with pytest.raises(ValueError):
-            with MDDocument(Path(temp_f.name)):
-                raise ValueError("test")
+        with pytest.raises(ValueError), MDDocument(Path(temp_f.name)):
+            raise ValueError("test")
 
     def test_append(self):
         md_doc = MDDocument(Path("/test.md"))

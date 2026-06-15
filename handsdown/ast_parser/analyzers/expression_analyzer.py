@@ -1,7 +1,4 @@
-"""
-AST analyzer for `ast.expr` records.
-"""
-from typing import Dict, List, Type
+"""AST analyzer for `ast.expr` records."""
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.base_analyzer import BaseAnalyzer
@@ -20,13 +17,13 @@ class ExpressionAnalyzer(BaseAnalyzer):
     def __init__(self) -> None:
         super().__init__()
         self._logger = get_logger()
-        self.parts: List[Node] = []
+        self.parts: list[Node] = []
 
     # dummy value to replace unknown nodes and operators
     UNKNOWN = "..."
 
     # representation map for binary operators
-    BINOP_SYMBOLS: Dict[Type[ast.AST], str] = {
+    BINOP_SYMBOLS: dict[type[ast.AST], str] = {
         ast.Add: "+",
         ast.Sub: "-",
         ast.Mult: "*",
@@ -42,10 +39,10 @@ class ExpressionAnalyzer(BaseAnalyzer):
     }
 
     # representation map for boolean operators
-    BOOLOP_SYMBOLS: Dict[Type[ast.AST], str] = {ast.And: "and", ast.Or: "or"}
+    BOOLOP_SYMBOLS: dict[type[ast.AST], str] = {ast.And: "and", ast.Or: "or"}
 
     # representation map for comparison operators
-    CMPOP_SYMBOLS: Dict[Type[ast.AST], str] = {
+    CMPOP_SYMBOLS: dict[type[ast.AST], str] = {
         ast.Eq: "==",
         ast.NotEq: "!=",
         ast.Lt: "<",
@@ -59,14 +56,14 @@ class ExpressionAnalyzer(BaseAnalyzer):
     }
 
     # representation map for unary operators
-    UNARYOP_SYMBOLS: Dict[Type[ast.AST], str] = {
+    UNARYOP_SYMBOLS: dict[type[ast.AST], str] = {
         ast.Invert: "~",
         ast.Not: "not",
         ast.UAdd: "+",
         ast.USub: "-",
     }
 
-    def visit_Str(self, node: ast.Str) -> None:
+    def visit_Constant(self, node: ast.Constant) -> None:
         """
         Parse info from `ast.Str` node and put it to `parts`.
 
@@ -76,39 +73,11 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
-        value = node.s
+        value = node.value
         if isinstance(value, bytes):
             value = value.decode(ENCODING)
-        self.parts.append(repr(value))
-
-    def visit_Bytes(self, node: ast.Bytes) -> None:
-        """
-        Parse info from `ast.Bytes` node and put it to `parts`.
-
-        Examples::
-
-            b"my_string"
-
-        Arguments:
-            node -- AST node.
-        """
-        value = node.s
-        self.parts.append(repr(value))
-
-    def visit_Num(self, node: ast.Num) -> None:
-        """
-        Parse info from `ast.Num` node and put it to `parts`.
-
-        Examples::
-
-            123
-            123.456
-
-        Arguments:
-            node -- AST node.
-        """
-        value = node.n
         self.parts.append(repr(value))
 
     def visit_Name(self, node: ast.Name) -> None:
@@ -121,23 +90,10 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.id)
         self.related_names.append(node.id)
-
-    def visit_NameConstant(self, node: ast.NameConstant) -> None:
-        """
-        Parse info from `ast.NameConstant` node and put it to `parts`.
-
-        Examples::
-
-            None
-            True
-
-        Arguments:
-            node -- AST node.
-        """
-        self.parts.append(repr(node.value))
 
     def visit_Subscript(self, node: ast.Subscript) -> None:
         """
@@ -152,6 +108,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.value)
         self.parts.append("[")
@@ -173,6 +130,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.value)
         self.parts.append(".")
@@ -193,6 +151,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         if node.elts:
             for index, element in enumerate(node.elts):
@@ -219,6 +178,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("[")
         self._visit_iterable(node)
@@ -234,6 +194,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         self._visit_iterable(node)
@@ -249,6 +210,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("(")
         self._visit_iterable(node)
@@ -260,6 +222,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.func)
         self.parts.append("(")
@@ -298,6 +261,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("*")
         self.parts.append(node.value)
@@ -313,6 +277,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         if not node.arg:
             self.parts.append("**")
@@ -329,6 +294,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         for index, key in enumerate(node.keys or []):
@@ -352,6 +318,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.left)
         for index, right in enumerate(node.comparators):
@@ -375,6 +342,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.left)
         self.parts.append(" ")
@@ -396,6 +364,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         operator = self.BOOLOP_SYMBOLS.get(type(node.op), self.UNKNOWN)
         if operator == self.UNKNOWN:
@@ -420,6 +389,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         operator = self.UNARYOP_SYMBOLS.get(type(node.op), self.UNKNOWN)
         if operator == self.UNKNOWN:
@@ -439,6 +409,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("lambda ")
         self.parts.append(node.args)
@@ -455,6 +426,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         arg_count = 0
         for index, arg in enumerate(node.args):
@@ -499,6 +471,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.arg)
         if node.annotation:
@@ -516,24 +489,12 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         if isinstance(node.value, ast.Tuple):  # type: ignore
             self._visit_iterable(node.value)  # type: ignore
             return
         self.parts.append(node.value)  # type: ignore
-
-    def visit_Ellipsis(self, node: ast.ASTEllipsis) -> None:
-        """
-        Parse info from `ast.Ellipsis` node and put it to `parts`.
-
-        Examples::
-
-            ...
-
-        Arguments:
-            node -- AST node.
-        """
-        self.parts.append("...")
 
     def visit_Slice(self, node: ast.Slice) -> None:
         """
@@ -549,6 +510,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         if node.lower:
             self.parts.append(node.lower)
@@ -569,11 +531,12 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("f'")
         for value in node.values:
-            if isinstance(value, (ast.Str, ast.Constant)):
-                str_value = value.s
+            if isinstance(value, ast.Constant):
+                str_value = value.value
                 if isinstance(str_value, bytes):
                     str_value = str_value.decode(ENCODING)
                 self.parts.append(str_value)
@@ -591,6 +554,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         self.parts.append(node.value)
@@ -606,6 +570,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("for ")
         self.parts.append(node.target)
@@ -625,6 +590,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         self.parts.append(node.key)
@@ -645,6 +611,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("[")
         self.parts.append(node.elt)
@@ -663,6 +630,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("{")
         self.parts.append(node.elt)
@@ -681,6 +649,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("(")
         self.parts.append(node.elt)
@@ -699,6 +668,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append(node.body)
         self.parts.append(" if ")
@@ -716,6 +686,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("await ")
         self.parts.append(node.value)
@@ -726,11 +697,12 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Examples::
 
-            yield
+        Yield:
             yield value
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("yield")
         if node.value:
@@ -747,6 +719,7 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.parts.append("yield from ")
         self.parts.append(node.value)
@@ -759,8 +732,9 @@ class ExpressionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self._logger.warning(
-            f"Could not render node {node.__class__.__name__}, replaced with `{self.UNKNOWN}`"
+            f"Could not render node {node.__class__.__name__}, replaced with `{self.UNKNOWN}`",
         )
         self.parts.append(self.UNKNOWN)

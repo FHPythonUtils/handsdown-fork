@@ -1,5 +1,5 @@
 """
-# Base Docstring Processor
+# Base Docstring Processor.
 
 Base class for all docstring processors:
 
@@ -18,11 +18,15 @@ Base class for all docstring processors:
 - `>>>` starts a new Markdown-style Python block, ended with unindent
   or line not starting with `>>>` or `...`
 """
+from __future__ import annotations
 
-from typing import Dict, Optional, Pattern, Tuple
+from typing import TYPE_CHECKING
 
 from handsdown.processors.section_map import SectionMap
 from handsdown.utils.indent_trimmer import IndentTrimmer
+
+if TYPE_CHECKING:
+    from re import Pattern
 
 
 class BaseDocstringProcessor:
@@ -33,11 +37,12 @@ class BaseDocstringProcessor:
         line_re_map -- Mapping of line regexp to format string for it
         section_name_map -- Mapping of Section search key to Section title
         replace_map -- Mapping of string to replace to replacer
+
     """
 
-    line_re_map: Tuple[Tuple[Pattern[str], str], ...] = tuple()
-    section_name_map: Dict[str, str] = {}
-    replace_map: Dict[str, str] = {}
+    line_re_map: tuple[tuple[Pattern[str], str], ...] = ()
+    section_name_map: dict[str, str] = {}
+    replace_map: dict[str, str] = {}
 
     def __init__(self) -> None:
         self.current_section_name = ""
@@ -73,6 +78,7 @@ class BaseDocstringProcessor:
         Returns:
             A dictionary where key is a section name and value is a list of string sof this
             section.
+
         """
         self._reset()
 
@@ -202,7 +208,7 @@ class BaseDocstringProcessor:
         self._add_line(line, indent=self._current_indent - self._codeblock_indent)
         self._codeblock_lines_count += 1
 
-    def _add_line(self, line: str, indent: Optional[int] = None) -> None:
+    def _add_line(self, line: str, indent: int | None = None) -> None:
         indent_str = " " * self._current_indent
         if indent is not None:
             indent_str = " " * indent

@@ -1,16 +1,17 @@
-"""
-Wrapper for an `ast.FunctionDef` node.
-"""
+"""Wrapper for an `ast.FunctionDef` node."""
 import re
-from typing import Iterable, List, Optional, Set
+from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.function_analyzer import FunctionAnalyzer
-from handsdown.ast_parser.node_records.argument_record import ArgumentRecord
 from handsdown.ast_parser.node_records.expression_record import ExpressionRecord
 from handsdown.ast_parser.node_records.node_record import NodeRecord
 from handsdown.ast_parser.node_records.text_record import TextRecord
 from handsdown.ast_parser.type_defs import ASTFunctionDef, RenderExpr
+
+if TYPE_CHECKING:
+    from handsdown.ast_parser.node_records.argument_record import ArgumentRecord
 
 
 class FunctionRecord(NodeRecord):
@@ -19,6 +20,7 @@ class FunctionRecord(NodeRecord):
 
     Arguments:
         node -- AST node.
+
     """
 
     _single_type_re = re.compile(r".+#\s*type:\s*(.+)")
@@ -26,10 +28,10 @@ class FunctionRecord(NodeRecord):
 
     def __init__(self, node: ASTFunctionDef, is_method: bool) -> None:
         super().__init__(node)
-        self.argument_records: List[ArgumentRecord] = []
+        self.argument_records: list[ArgumentRecord] = []
         self.is_method = is_method
-        self.return_type_hint: Optional[ExpressionRecord] = None
-        self.decorator_records: List[ExpressionRecord] = []
+        self.return_type_hint: ExpressionRecord | None = None
+        self.decorator_records: list[ExpressionRecord] = []
         self.is_staticmethod = False
         self.is_classmethod = False
         self.is_async = isinstance(node, ast.AsyncFunctionDef)
@@ -38,11 +40,9 @@ class FunctionRecord(NodeRecord):
         self.docstring = self._get_docstring()
 
     @property
-    def related_names(self) -> Set[str]:
-        """
-        Set of related names.
-        """
-        result: Set[str] = set()
+    def related_names(self) -> set[str]:
+        """Set of related names."""
+        result: set[str] = set()
         for decorator_record in self.decorator_records:
             result.update(decorator_record.related_names)
         for argument_record in self.argument_records:
@@ -77,7 +77,7 @@ class FunctionRecord(NodeRecord):
                     self.is_classmethod = True
 
     @staticmethod
-    def _strip_arg_type(arg_type: str) -> List[str]:
+    def _strip_arg_type(arg_type: str) -> list[str]:
         bracket_count = 0
         result = [""]
         for c in arg_type:
@@ -91,8 +91,7 @@ class FunctionRecord(NodeRecord):
 
             result[-1] = f"{result[-1]}{c}"
 
-        result = [i.strip() for i in result if i.strip() and i.strip() != "..."]
-        return result
+        return [i.strip() for i in result if i.strip() and i.strip() != "..."]
 
     def parse_type_comments(self, lines: Iterable[str]) -> None:
         """
@@ -134,11 +133,9 @@ class FunctionRecord(NodeRecord):
                     argument = self.argument_records[argument_index]
                     argument.type_hint = TextRecord(argument.node, arg_type.strip())
 
-    def _render_parts(self) -> List[RenderExpr]:
+    def _render_parts(self) -> list[RenderExpr]:
         return [f"def {self.name}()"]
 
     def is_init(self) -> bool:
-        """
-        Returns True if function is an __init__ method.
-        """
+        """Returns True if function is an __init__ method."""
         return self.name == "__init__"

@@ -1,8 +1,5 @@
-"""
-Wrapper for an `ast.expr` node.
-"""
+"""Wrapper for an `ast.expr` node."""
 import re
-from typing import List, Set
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.expression_analyzer import ExpressionAnalyzer
@@ -16,20 +13,19 @@ class ExpressionRecord(NodeRecord):
 
     Arguments:
         node -- AST node.
+
     """
 
     _str_split_re = re.compile(r"[\]\[ ,]")
 
     def __init__(self, node: ast.AST) -> None:
         super().__init__(node)
-        self.parts: List[Node] = []
+        self.parts: list[Node] = []
         self.analyzer = ExpressionAnalyzer()
 
     @property
-    def related_names(self) -> Set[str]:
-        """
-        Set of related names.
-        """
+    def related_names(self) -> set[str]:
+        """Set of related names."""
         return set(self.analyzer.related_names)
 
     def _parse(self) -> None:
@@ -41,8 +37,8 @@ class ExpressionRecord(NodeRecord):
             self.parts = self.analyzer.parts
             return
 
-    def _render_parts(self) -> List[RenderExpr]:
-        result: List[RenderExpr] = []
+    def _render_parts(self) -> list[RenderExpr]:
+        result: list[RenderExpr] = []
         for part in self.parts:
             if isinstance(part, ast.AST):
                 result.append(ExpressionRecord(part))
@@ -52,9 +48,7 @@ class ExpressionRecord(NodeRecord):
         return result
 
     def render_str(self) -> str:
-        """
-        Render expression to a string.
-        """
+        """Render expression to a string."""
         self.parse()
         result = []
         for part in self._render_parts():

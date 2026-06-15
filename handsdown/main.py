@@ -1,8 +1,5 @@
-"""
-Main CLI entrypoint for `handsdown`.
-"""
+"""Main CLI entrypoint for `handsdown`."""
 import sys
-from typing import Type
 
 from handsdown.cli_parser import CLINamespace, parse_args
 from handsdown.constants import SOURCES_GLOB, Theme
@@ -14,10 +11,8 @@ from handsdown.utils.logger import get_logger
 from handsdown.utils.path_finder import PathFinder
 
 
-def select_generator_cls(theme: Theme) -> Type[BaseGenerator]:
-    """
-    Select a generator based on the theme.
-    """
+def select_generator_cls(theme: Theme) -> type[BaseGenerator]:
+    """Select a generator based on the theme."""
     return {
         Theme.RTD: RTDGenerator,
         Theme.MD: MaterialGenerator,
@@ -53,16 +48,14 @@ def api(args: CLINamespace) -> None:
 
 
 def main() -> None:
-    """
-    Main entrypoint for CLI.
-    """
+    """Main entrypoint for CLI."""
     args = parse_args(sys.argv[1:])
     logger = get_logger(level=args.log_level)
 
     try:
         api(args)
     except GeneratorError as e:
-        logger.error(e)
+        logger.exception(e)
         sys.exit(1)
 
 

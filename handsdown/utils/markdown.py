@@ -1,7 +1,6 @@
-"""
-Utils for markdown rendering.
-"""
-from typing import Dict, Iterable, List, Type, TypeVar
+"""Utils for markdown rendering."""
+from collections.abc import Iterable
+from typing import TypeVar
 
 _R = TypeVar("_R", bound="TableOfContents")
 
@@ -14,6 +13,7 @@ class Header:
         title -- Header title
         level -- Header level, 1-6
         anchor -- Anchor link
+
     """
 
     def __init__(self, title: str, level: int, anchor: str) -> None:
@@ -22,9 +22,7 @@ class Header:
         self.anchor: str = anchor
 
     def render(self) -> str:
-        """
-        Render menu item to string.
-        """
+        """Render menu item to string."""
         indent = "  " * (self.level - 1)
         return f"{indent}- [{self.title}](#{self.anchor})"
 
@@ -35,22 +33,24 @@ class TableOfContents:
 
     Arguments:
         headers -- List of headers
+
     """
 
     def __init__(self, headers: Iterable[Header]) -> None:
-        self.headers: List[Header] = list(headers)
+        self.headers: list[Header] = list(headers)
 
     @classmethod
-    def parse(cls: Type[_R], text: str) -> _R:
+    def parse(cls: type[_R], text: str) -> _R:
         """
         Parse table of Contents for MarkDown text.
 
         Arguments:
             text -- MarkDown text.
+
         """
-        headers: List[Header] = []
+        headers: list[Header] = []
         in_codeblock = False
-        title_counter: Dict[str, int] = {}
+        title_counter: dict[str, int] = {}
         for line in text.splitlines():
             if line.startswith("```"):
                 in_codeblock = not in_codeblock
@@ -69,10 +69,8 @@ class TableOfContents:
         return cls(headers)
 
     def render(self, max_level: int = 3) -> str:
-        """
-        Render ToC to string.
-        """
-        result: List[str] = []
+        """Render ToC to string."""
+        result: list[str] = []
         for header in self.headers:
             if header.level > max_level:
                 continue
@@ -85,13 +83,11 @@ class TableOfContents:
 
 
 def insert_md_toc(text: str, depth: int = 3) -> str:
-    """
-    Insert Table of Contents before the first second-level header.
-    """
+    """Insert Table of Contents before the first second-level header."""
     toc = TableOfContents.parse(text)
     toc_lines = toc.render(depth).splitlines()
     lines = text.splitlines()
-    result: List[str] = []
+    result: list[str] = []
     inserted = False
     for line in lines:
         if not inserted and line.startswith("## "):

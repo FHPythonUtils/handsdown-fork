@@ -1,13 +1,9 @@
-"""
-Path utils.
-"""
+"""Path utils."""
 from pathlib import Path
 
 
 def print_path(path: Path) -> str:
-    """
-    Print path relative to workdir.
-    """
+    """Print path relative to workdir."""
     if path.is_absolute():
         cwd = Path.cwd()
         if path == cwd or path.parts <= cwd.parts:

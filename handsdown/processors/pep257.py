@@ -1,5 +1,5 @@
 """
-# PEP 257 Docstring Processor
+# PEP 257 Docstring Processor.
 
 Docstring processor for PEP 257 and Google docstring format.
 
@@ -31,9 +31,7 @@ from handsdown.processors.base import BaseDocstringProcessor
 
 
 class PEP257DocstringProcessor(BaseDocstringProcessor):
-    """
-    Docstring processor for PEP 257 and Google docstring format.
-    """
+    """Docstring processor for PEP 257 and Google docstring format."""
 
     named_section_line_re_map = (
         # Google non-typed

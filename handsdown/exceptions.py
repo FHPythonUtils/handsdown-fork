@@ -1,33 +1,21 @@
-"""
-Exceptions used by the project.
-"""
+"""Exceptions used by the project."""
 
 
 class GeneratorError(Exception):
-    """
-    Main error for `BaseGenerator`.
-    """
+    """Main error for `BaseGenerator`."""
 
 
 class LoaderError(Exception):
-    """
-    Main error for `Loader`.
-    """
+    """Main error for `Loader`."""
 
 
 class ImportStringError(Exception):
-    """
-    Main error for `ImportString`.
-    """
+    """Main error for `ImportString`."""
 
 
 class PathFinderError(Exception):
-    """
-    Main error for `PathFinder`.
-    """
+    """Main error for `PathFinder`."""
 
 
 class ParserError(Exception):
-    """
-    Main error for source code parsing issues.
-    """
+    """Main error for source code parsing issues."""

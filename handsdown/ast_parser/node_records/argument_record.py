@@ -1,13 +1,15 @@
-"""
-Wrapper for an `ast.arg` node.
-"""
-from typing import List, Optional, Set
+"""Wrapper for an `ast.arg` node."""
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.node_records.expression_record import ExpressionRecord
 from handsdown.ast_parser.node_records.node_record import NodeRecord
 from handsdown.ast_parser.node_records.text_record import TextRecord
-from handsdown.ast_parser.type_defs import Node, RenderExpr
+
+if TYPE_CHECKING:
+    from handsdown.ast_parser.type_defs import Node, RenderExpr
 
 
 class ArgumentRecord(NodeRecord):
@@ -19,30 +21,32 @@ class ArgumentRecord(NodeRecord):
         name -- Argument name.
         type_hint -- Argument type hint.
         prefix -- Prefix for arguemnt name, used for starargs.
+
     """
 
     def __init__(
         self,
         node: ast.arg,
         name: str,
-        type_hint: Optional[ast.expr] = None,
+        type_hint: ast.expr | None = None,
         prefix: str = "",
     ) -> None:
         super().__init__(node)
-        self._default: Optional[ExpressionRecord] = None
-        self.type_hint: Optional[ExpressionRecord] = None
+        self._default: ExpressionRecord | None = None
+        self.type_hint: ExpressionRecord | None = None
         if type_hint:
             self.type_hint = ExpressionRecord(type_hint)
         self.prefix = prefix
         self.name = name
 
     @property
-    def default(self) -> Optional[ExpressionRecord]:
+    def default(self) -> ExpressionRecord | None:
         """
         Default value of the argument.
 
         Returns:
             Default exression or None.
+
         """
         return self._default
 
@@ -53,6 +57,7 @@ class ArgumentRecord(NodeRecord):
 
         Returns:
             True if required, False otherwise.
+
         """
         return self._default is None
 
@@ -62,6 +67,7 @@ class ArgumentRecord(NodeRecord):
 
         Arguments:
             node -- Text or AST node.
+
         """
         if isinstance(node, str):
             self._default = TextRecord(self.node, node)
@@ -69,10 +75,8 @@ class ArgumentRecord(NodeRecord):
             self._default = ExpressionRecord(node)
 
     @property
-    def related_names(self) -> Set[str]:
-        """
-        Set of related names.
-        """
+    def related_names(self) -> set[str]:
+        """Set of related names."""
         result = set()
         if self.default:
             result.update(self.default.related_names)
@@ -81,21 +85,18 @@ class ArgumentRecord(NodeRecord):
 
         return result
 
-    def _render_parts(self) -> List[RenderExpr]:
-        parts: List[RenderExpr] = []
+    def _render_parts(self) -> list[RenderExpr]:
+        parts: list[RenderExpr] = []
         if self.prefix:
             parts.append(self.prefix)
 
         parts.append(self.name)
         if self.type_hint:
-            parts.append(": ")
-            parts.append(self.type_hint)
+            parts.extend((": ", self.type_hint))
             if self.default:
-                parts.append(" = ")
-                parts.append(self.default)
+                parts.extend((" = ", self.default))
         elif self.default:
-            parts.append("=")
-            parts.append(self.default)
+            parts.extend(("=", self.default))
 
         return parts
 

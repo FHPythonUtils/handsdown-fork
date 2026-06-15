@@ -1,7 +1,6 @@
-"""
-AST analyzer for `ast.Module` records.
-"""
-from typing import List, Union
+"""AST analyzer for `ast.Module` records."""
+
+from typing import Union
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.base_analyzer import BaseAnalyzer
@@ -9,17 +8,15 @@ from handsdown.ast_parser.type_defs import ASTFunctionDef, ASTImport
 
 
 class ModuleAnalyzer(BaseAnalyzer):
-    """
-    AST analyzer for `ast.Module` records.
-    """
+    """AST analyzer for `ast.Module` records."""
 
     def __init__(self) -> None:
         super().__init__()
-        self.all_names: List[str] = []
-        self.import_nodes: List[ASTImport] = []
-        self.function_nodes: List[ASTFunctionDef] = []
-        self.attribute_nodes: List[Union[ast.Assign, ast.AnnAssign]] = []
-        self.class_nodes: List[ast.ClassDef] = []
+        self.all_names: list[str] = []
+        self.import_nodes: list[ASTImport] = []
+        self.function_nodes: list[ASTFunctionDef] = []
+        self.attribute_nodes: list[Union[ast.Assign, ast.AnnAssign]] = []
+        self.class_nodes: list[ast.ClassDef] = []
 
     def visit_Import(self, node: ast.Import) -> None:
         """
@@ -36,6 +33,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.import_nodes.append(node)
 
@@ -52,6 +50,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self.import_nodes.append(node)
 
@@ -70,6 +69,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         name = node.name
         docstring = self.get_docstring(node)
@@ -106,6 +106,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         return self._visit_FunctionDef(node)
 
@@ -124,6 +125,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         return self._visit_FunctionDef(node)
 
@@ -152,6 +154,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         # skip multiple assignments
         if len(node.targets) != 1:
@@ -165,8 +168,8 @@ class ModuleAnalyzer(BaseAnalyzer):
         # gather public names from `__all__` directive
         if name == "__all__" and isinstance(node.value, (ast.List, ast.Tuple, ast.Set)):
             for element in node.value.elts:
-                if isinstance(element, (ast.Str, ast.Constant)):
-                    value = element.s
+                if isinstance(element, ast.Constant):
+                    value = element.value
                     if isinstance(value, bytes):
                         value = value.decode("utf-8")
                     self.all_names.append(value)
@@ -192,6 +195,7 @@ class ModuleAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         # skip complex assignments
         if not isinstance(node.target, ast.Name):

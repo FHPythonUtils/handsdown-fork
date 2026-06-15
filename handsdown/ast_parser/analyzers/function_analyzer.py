@@ -1,23 +1,22 @@
-"""
-AST analyzer for `ast.FunctionDef` records.
-"""
-from typing import Any, List, Optional, Sequence
+"""AST analyzer for `ast.FunctionDef` records."""
+from typing import TYPE_CHECKING, Any, Optional
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.base_analyzer import BaseAnalyzer
 from handsdown.ast_parser.node_records.argument_record import ArgumentRecord
 from handsdown.ast_parser.type_defs import ASTFunctionDef
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 
 class FunctionAnalyzer(BaseAnalyzer):
-    """
-    AST analyzer for `ast.FunctionDef` records.
-    """
+    """AST analyzer for `ast.FunctionDef` records."""
 
     def __init__(self) -> None:
         super().__init__()
-        self.argument_records: List[ArgumentRecord] = []
-        self.decorator_nodes: List[ast.expr] = []
+        self.argument_records: list[ArgumentRecord] = []
+        self.decorator_nodes: list[ast.expr] = []
         self.return_type_hint: Optional[ast.expr] = None
 
     @staticmethod
@@ -75,6 +74,7 @@ class FunctionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         # FIXME: this works only for py38
         if hasattr(node, "posonlyargs"):
@@ -136,6 +136,7 @@ class FunctionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self._visit_FunctionDef(node)
 
@@ -155,6 +156,7 @@ class FunctionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self._visit_FunctionDef(node)
 
@@ -164,4 +166,5 @@ class FunctionAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """

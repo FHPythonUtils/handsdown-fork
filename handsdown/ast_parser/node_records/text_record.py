@@ -1,8 +1,5 @@
-"""
-Wrapper for a text-only `ast.expr` node.
-"""
+"""Wrapper for a text-only `ast.expr` node."""
 import re
-from typing import List, Set
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.node_records.expression_record import ExpressionRecord
@@ -16,6 +13,7 @@ class TextRecord(ExpressionRecord):
     Arguments:
         node -- Related AST node.
         text -- Text to represent it.
+
     """
 
     _str_split_re = re.compile(r"[\]\[ ,]")
@@ -26,7 +24,7 @@ class TextRecord(ExpressionRecord):
         self.title = text
 
     @property
-    def related_names(self) -> Set[str]:
+    def related_names(self) -> set[str]:
         """
         A list of fake `ast.Name.id` records inside the node.
 
@@ -37,15 +35,15 @@ class TextRecord(ExpressionRecord):
 
         Returns:
             A set of related names.
+
         """
         result = set()
-        for related_name in self._str_split_re.split(self.name):
-            result.add(related_name)
+        result.update(self._str_split_re.split(self.name))
 
         return result
 
     def _parse(self) -> None:
         return
 
-    def _render_parts(self) -> List[RenderExpr]:
+    def _render_parts(self) -> list[RenderExpr]:
         return [self.name]

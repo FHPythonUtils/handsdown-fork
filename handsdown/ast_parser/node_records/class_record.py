@@ -1,16 +1,20 @@
-"""
-Wrapper for an `ast.ClassDef` node.
-"""
-from typing import Iterator, List, Optional, Set
+"""Wrapper for an `ast.ClassDef` node."""
+from __future__ import annotations
 
-import handsdown.ast_parser.smart_ast as ast
+from typing import TYPE_CHECKING
+
 from handsdown.ast_parser.analyzers.class_analyzer import ClassAnalyzer
-from handsdown.ast_parser.node_records.argument_record import ArgumentRecord
 from handsdown.ast_parser.node_records.attribute_record import AttributeRecord
 from handsdown.ast_parser.node_records.expression_record import ExpressionRecord
 from handsdown.ast_parser.node_records.function_record import FunctionRecord
 from handsdown.ast_parser.node_records.node_record import NodeRecord
-from handsdown.ast_parser.type_defs import RenderExpr
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    import handsdown.ast_parser.smart_ast as ast
+    from handsdown.ast_parser.node_records.argument_record import ArgumentRecord
+    from handsdown.ast_parser.type_defs import RenderExpr
 
 
 class ClassRecord(NodeRecord):
@@ -19,19 +23,20 @@ class ClassRecord(NodeRecord):
 
     Arguments:
         node -- AST node.
+
     """
 
     def __init__(self, node: ast.ClassDef) -> None:
         super().__init__(node)
-        self.method_records: List[FunctionRecord] = []
-        self.decorator_records: List[ExpressionRecord] = []
-        self.argument_records: List[ArgumentRecord] = []
-        self.base_records: List[ExpressionRecord] = []
+        self.method_records: list[FunctionRecord] = []
+        self.decorator_records: list[ExpressionRecord] = []
+        self.argument_records: list[ArgumentRecord] = []
+        self.base_records: list[ExpressionRecord] = []
         self.name = node.name
         self.title = self.name
         self.docstring = self._get_docstring()
 
-    def find_record(self, name: str) -> Optional[NodeRecord]:
+    def find_record(self, name: str) -> NodeRecord | None:
         """
         Find child method or attribute record.
 
@@ -40,6 +45,7 @@ class ClassRecord(NodeRecord):
 
         Returns:
             Itself or None.
+
         """
         if name == self.name:
             return self
@@ -55,11 +61,9 @@ class ClassRecord(NodeRecord):
         return None
 
     @property
-    def related_names(self) -> Set[str]:
-        """
-        Set of related names.
-        """
-        result: Set[str] = set()
+    def related_names(self) -> set[str]:
+        """Set of related names."""
+        result: set[str] = set()
         for decorator in self.decorator_records:
             result.add(decorator.name)
             result.update(decorator.related_names)
@@ -77,14 +81,13 @@ class ClassRecord(NodeRecord):
 
         Yields:
             A child record.
+
         """
-        for method in self.get_public_methods():
-            yield method
+        yield from self.get_public_methods()
 
-        for attribute_record in self.attribute_records:
-            yield attribute_record
+        yield from self.attribute_records
 
-    def get_public_methods(self) -> List[FunctionRecord]:
+    def get_public_methods(self) -> list[FunctionRecord]:
         """
         Get Class public methods.
 
@@ -93,6 +96,7 @@ class ClassRecord(NodeRecord):
 
         Returns:
             A list of child records.
+
         """
         result = []
         for method_record in self.method_records:
@@ -120,14 +124,12 @@ class ClassRecord(NodeRecord):
 
         self.method_records.sort(key=lambda x: x.name)
 
-    def _render_parts(self) -> List[RenderExpr]:
+    def _render_parts(self) -> list[RenderExpr]:
         return [f"class {self.name}"]
 
     @property
-    def init_method(self) -> Optional[FunctionRecord]:
-        """
-        Get the `__init__` method.
-        """
+    def init_method(self) -> FunctionRecord | None:
+        """Get the `__init__` method."""
         for method in self.method_records:
             if method.is_init():
                 return method

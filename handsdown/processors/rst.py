@@ -1,5 +1,5 @@
 """
-# reStructuredText Docstring Processor
+# reStructuredText Docstring Processor.
 
 Docstring processor for restructured text docstring format.
 
@@ -31,9 +31,7 @@ from handsdown.processors.base import BaseDocstringProcessor
 
 
 class RSTDocstringProcessor(BaseDocstringProcessor):
-    """
-    Docstring processor for restructured text docstring format.
-    """
+    """Docstring processor for restructured text docstring format."""
 
     _section_re = re.compile(r"^\.\. (?P<section>\S+)::(?: (?P<body>.*))?")
 
@@ -42,7 +40,7 @@ class RSTDocstringProcessor(BaseDocstringProcessor):
         (
             re.compile(
                 r"^:(?P<section>param|parameter)\s+(?P<type>\w+)"
-                r"\s+(?P<param>\w+)\s*:\s*(?P<desc>.+)$"
+                r"\s+(?P<param>\w+)\s*:\s*(?P<desc>.+)$",
             ),
             "- `{param}` *{type}* - {desc}",
         ),
@@ -131,7 +129,7 @@ class RSTDocstringProcessor(BaseDocstringProcessor):
                 self._add_line(line)
                 return
 
-            if directive_name in ("code-block", "math", "highlight"):
+            if directive_name in {"code-block", "math", "highlight"}:
                 self._in_codeblock = True
                 self._in_indent_codeblock = True
                 self._codeblock_indent = self._current_indent

@@ -13,9 +13,7 @@ from handsdown.processors.section_map import SectionMap
 
 
 class SmartDocstringProcessor(BaseDocstringProcessor):
-    """
-    Docstring processor that selects a `DocstringProcessor` based on a docstring content.
-    """
+    """Docstring processor that selects a `DocstringProcessor` based on a docstring content."""
 
     def __init__(self) -> None:
         self._pep257_processor = PEP257DocstringProcessor()
@@ -35,6 +33,7 @@ class SmartDocstringProcessor(BaseDocstringProcessor):
         Returns:
             A dictionary where key is a section name and value is a list of string sof this
             section.
+
         """
         stripped_lines = content.split("\n")
 

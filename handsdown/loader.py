@@ -1,9 +1,7 @@
-"""
-Loader for python source code.
-"""
+"""Loader for python source code."""
+from __future__ import annotations
 
-from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from handsdown.ast_parser.node_records.module_record import ModuleRecord
 from handsdown.constants import ENCODING
@@ -12,6 +10,9 @@ from handsdown.utils.import_string import ImportString
 from handsdown.utils.logger import get_logger
 from handsdown.utils.path_finder import PathFinder
 from handsdown.utils.strings import extract_md_title
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class Loader:
@@ -27,6 +28,7 @@ class Loader:
         root_path -- Root path of the project.
         output_path -- Docs output path.
         encoding -- File encoding.
+
     """
 
     def __init__(self, root_path: Path, output_path: Path, encoding: str = ENCODING) -> None:
@@ -45,6 +47,7 @@ class Loader:
 
         Returns:
             A path to the output `.md` file even if it does not exist yet.
+
         """
         relative_source_path = self._root_path_finder.relative(source_path)
         if relative_source_path.stem == "__init__":
@@ -56,7 +59,7 @@ class Loader:
         relative_output_path = relative_source_path.parent / file_name
         return self._output_path / relative_output_path
 
-    def get_module_record(self, source_path: Path) -> Optional[ModuleRecord]:
+    def get_module_record(self, source_path: Path) -> ModuleRecord | None:
         """
         Build `ModuleRecord` for given `source_path`.
 
@@ -68,6 +71,7 @@ class Loader:
 
         Raises:
             LoaderError -- If python source cannot be loaded.
+
         """
         if not (source_path.parent / "__init__.py").exists():
             return None
@@ -86,8 +90,9 @@ class Loader:
             )
             module_record.build_children()
         except Exception as e:
+            msg = f"{e.__class__.__name__} while loading {source_path.as_posix()}: {e}"
             raise LoaderError(
-                f"{e.__class__.__name__} while loading {source_path.as_posix()}: {e}"
+                msg,
             ) from e
 
         if module_record.docstring:
@@ -113,12 +118,14 @@ class Loader:
 
         Raises:
             LoaderError -- If python source cannot be parsed.
+
         """
         try:
             module_record.parse()
         except Exception as e:
+            msg = f"{e.__class__.__name__} while parsing {module_record.source_path.as_posix()}: {e}"
             raise LoaderError(
-                f"{e.__class__.__name__} while parsing {module_record.source_path.as_posix()}: {e}"
+                msg,
             ) from e
 
     def get_import_string(self, source_path: Path) -> str:
@@ -139,6 +146,7 @@ class Loader:
 
         Returns:
             A Python import string.
+
         """
         relative_path = source_path.relative_to(self._root_path)
         name_parts = []

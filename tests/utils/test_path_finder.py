@@ -1,3 +1,4 @@
+import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -53,17 +54,15 @@ class TestPathFinder:
         assert path_finder.exclude_exprs == ["my_dir/*", "expr/**/*"]
 
     def test_glob(self):
-        import tempfile
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_dir = Path(temp_dir)
+        with tempfile.TemporaryDirectory() as temp_dir_str:
+            temp_dir = Path(temp_dir_str)
             temp_dir.joinpath("include").mkdir()
             temp_dir.joinpath("exclude").mkdir()
             temp_dir.joinpath("include/file.py").touch()
             temp_dir.joinpath("exclude/file.py").touch()
 
             path_finder = PathFinder(temp_dir)
-            assert list(sorted(path_finder.glob("*/*.py"))) == [
+            assert sorted(path_finder.glob("*/*.py")) == [
                 temp_dir.joinpath("exclude/file.py"),
                 temp_dir.joinpath("include/file.py"),
             ]
@@ -73,7 +72,7 @@ class TestPathFinder:
             path_finder.include_exprs = ["include/*"]
             assert list(path_finder.glob("*/*.py")) == [temp_dir.joinpath("include/file.py")]
 
-    def test_mkdir(self):
+    def test_mkdir(self) -> None:
         path = MagicMock()
         path.exists.return_value = False
         parent_path = MagicMock()

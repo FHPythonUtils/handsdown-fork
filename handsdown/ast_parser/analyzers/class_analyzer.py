@@ -1,7 +1,5 @@
-"""
-AST analyzer for `ast.ClassDef` records.
-"""
-from typing import List, Union
+"""AST analyzer for `ast.ClassDef` records."""
+from typing import Union
 
 import handsdown.ast_parser.smart_ast as ast
 from handsdown.ast_parser.analyzers.base_analyzer import BaseAnalyzer
@@ -9,16 +7,14 @@ from handsdown.ast_parser.type_defs import ASTFunctionDef
 
 
 class ClassAnalyzer(BaseAnalyzer):
-    """
-    AST analyzer for `ast.ClassDef` records.
-    """
+    """AST analyzer for `ast.ClassDef` records."""
 
     def __init__(self) -> None:
         super().__init__()
-        self.base_nodes: List[ast.expr] = []
-        self.decorator_nodes: List[ast.expr] = []
-        self.method_nodes: List[ASTFunctionDef] = []
-        self.attribute_nodes: List[Union[ast.Assign, ast.AnnAssign]] = []
+        self.base_nodes: list[ast.expr] = []
+        self.decorator_nodes: list[ast.expr] = []
+        self.method_nodes: list[ASTFunctionDef] = []
+        self.attribute_nodes: list[Union[ast.Assign, ast.AnnAssign]] = []
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
@@ -37,6 +33,7 @@ class ClassAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         for decorator_node in node.decorator_list:
             self.decorator_nodes.append(decorator_node)
@@ -51,14 +48,12 @@ class ClassAnalyzer(BaseAnalyzer):
         docstring = self.get_docstring(node)
 
         # skip private methods with no docstrings
-        if name.startswith("_"):
-            if not name.startswith("__") and not docstring:
-                return
+        if name.startswith("_") and not name.startswith("__") and not docstring:
+            return
 
         # skip magic methods with no docstrings
-        if name.startswith("__"):
-            if name != "__init__" and not docstring:
-                return
+        if name.startswith("__") and name != "__init__" and not docstring:
+            return
 
         self.method_nodes.append(node)
 
@@ -77,6 +72,7 @@ class ClassAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self._visit_FunctionDef(node)
 
@@ -95,6 +91,7 @@ class ClassAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         self._visit_FunctionDef(node)
 
@@ -121,6 +118,7 @@ class ClassAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         # skip multiple assignments
         if len(node.targets) != 1:
@@ -154,6 +152,7 @@ class ClassAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """
         # skip complex assignments
         if not isinstance(node.target, ast.Name):
@@ -173,4 +172,5 @@ class ClassAnalyzer(BaseAnalyzer):
 
         Arguments:
             node -- AST node.
+
         """

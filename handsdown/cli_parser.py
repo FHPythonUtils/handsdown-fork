@@ -1,41 +1,33 @@
-"""
-CLI Parser.
-"""
+"""CLI Parser."""
 import argparse
 import contextlib
 import logging
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
+from importlib import metadata
 from pathlib import Path
-from typing import Iterable, List
 from urllib.parse import urlparse, urlunparse
 
 from handsdown.constants import ENCODING, EXCLUDE_EXPRS, PACKAGE_NAME, Theme
 
-try:
-    import importlib.metadata as metadata  # type: ignore
-except ModuleNotFoundError:
-    import importlib_metadata as metadata  # type: ignore
-
 
 @dataclass
 class CLINamespace:
-    """
-    Main CLI Namespace.
-    """
+    """Main CLI Namespace."""
 
     panic: bool
     input_path: Path
     output_path: Path
     toc_depth: int
     log_level: int
-    include: List[str]
-    exclude: List[str]
+    include: list[str]
+    exclude: list[str]
     source_code_url: str
     source_code_path: Path
     branch: str
     project_name: str
-    files: List[Path]
+    files: list[Path]
     cleanup: bool
     encoding: str
     create_configs: bool
@@ -47,6 +39,7 @@ class CLINamespace:
 
         Returns:
             URL as a string.
+
         """
         if not self.source_code_url:
             return ""
@@ -71,6 +64,7 @@ def git_repo(git_repo_url: str) -> str:
 
     Returns:
         A GitHub URL.
+
     """
     if not git_repo_url:
         return git_repo_url
@@ -83,7 +77,8 @@ def git_repo(git_repo_url: str) -> str:
     if not match:
         match = short_https_repo_re.match(git_repo_url)
     if not match:
-        raise argparse.ArgumentTypeError(f"Cannot parse Git URL {git_repo_url}")
+        msg = f"Cannot parse Git URL {git_repo_url}"
+        raise argparse.ArgumentTypeError(msg)
 
     user = match.groupdict()["user"]
     repo = match.groupdict()["repo"]
@@ -99,6 +94,7 @@ def abs_path(path_str: str) -> Path:
 
     Returns:
         An absolute path.
+
     """
     return Path(path_str).absolute()
 
@@ -115,10 +111,12 @@ def dir_abs_path(path_str: str) -> Path:
 
     Raises:
         argparse.ArgumentTypeError -- If path is not a directory.
+
     """
     path = Path(path_str).absolute()
     if path.exists() and not path.is_dir():
-        raise argparse.ArgumentTypeError(f"Path {path} is not a directory")
+        msg = f"Path {path} is not a directory"
+        raise argparse.ArgumentTypeError(msg)
     return path
 
 
@@ -134,24 +132,26 @@ def existing_dir_abs_path(path_str: str) -> Path:
 
     Raises:
         argparse.ArgumentTypeError -- If path does not exist or is not a directory.
+
     """
     path = Path(path_str).absolute()
     if not path.exists():
-        raise argparse.ArgumentTypeError(f"Path {path} does not exist")
+        msg = f"Path {path} does not exist"
+        raise argparse.ArgumentTypeError(msg)
     if not path.is_dir():
-        raise argparse.ArgumentTypeError(f"Path {path} is not a directory")
+        msg = f"Path {path} is not a directory"
+        raise argparse.ArgumentTypeError(msg)
     return path
 
 
 def parse_theme(name: str) -> Theme:
-    """
-    Cast theme name to `Theme`.
-    """
+    """Cast theme name to `Theme`."""
     try:
         return Theme(name)
     except ValueError:
         choices = ", ".join([i.value for i in Theme])
-        raise argparse.ArgumentTypeError(f"Invalid theme {name}, choices are: {choices}")
+        msg = f"Invalid theme {name}, choices are: {choices}"
+        raise argparse.ArgumentTypeError(msg) from None
 
 
 def _get_package_version() -> str:
@@ -167,15 +167,16 @@ def parse_args(args: Iterable[str]) -> CLINamespace:
 
     Returns:
         An `argparse.ArgumentParser` instance.
+
     """
     version = _get_package_version()
     exclude_exprs_str = " ".join([f"'{i}'" for i in EXCLUDE_EXPRS])
 
     parser = argparse.ArgumentParser(
-        PACKAGE_NAME, description="Docstring-based python documentation generator."
+        PACKAGE_NAME, description="Docstring-based python documentation generator.",
     )
     parser.add_argument(
-        "include", nargs="*", help="Path expressions to include source files", default=[]
+        "include", nargs="*", help="Path expressions to include source files", default=[],
     )
     parser.add_argument(
         "--exclude",
@@ -230,10 +231,10 @@ def parse_args(args: Iterable[str]) -> CLINamespace:
         default="main",
     )
     parser.add_argument(
-        "--toc-depth", help="Maximum depth of child modules ToC (default: 3)", default=3, type=int
+        "--toc-depth", help="Maximum depth of child modules ToC (default: 3)", default=3, type=int,
     )
     parser.add_argument(
-        "--cleanup", action="store_true", help="Remove orphaned auto-generated docs"
+        "--cleanup", action="store_true", help="Remove orphaned auto-generated docs",
     )
     parser.add_argument(
         "-n",

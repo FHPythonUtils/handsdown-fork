@@ -19,6 +19,7 @@ def blackify(content: str) -> str:
 
     Raises:
         ValueError -- If `content` is not a valid Python code.
+
     """
     file_mode = Mode(is_pyi=False, line_length=89, preview=True)
     try:
@@ -26,6 +27,7 @@ def blackify(content: str) -> str:
     except NothingChanged:
         pass
     except (IndentationError, InvalidInput) as e:
-        raise ParserError(f"Cannot parse {content}: {e}") from e
+        msg = f"Cannot parse {content}: {e}"
+        raise ParserError(msg) from e
 
     return content.rstrip("\n")

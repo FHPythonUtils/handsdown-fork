@@ -1,7 +1,5 @@
-"""
-`Section` block.
-"""
-from typing import Iterable
+"""`Section` block."""
+from collections.abc import Iterable
 
 from handsdown.utils.indent_trimmer import IndentTrimmer
 
@@ -12,6 +10,7 @@ class SectionBlock:
 
     Arguments:
         lines -- List of lines.
+
     """
 
     def __init__(self, lines: Iterable[str]) -> None:
@@ -23,6 +22,7 @@ class SectionBlock:
 
         Returns:
             Block lines as a text.
+
         """
         lines = IndentTrimmer.trim_lines(self.lines)
         return "\n".join(lines)

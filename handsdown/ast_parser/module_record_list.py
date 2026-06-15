@@ -1,24 +1,26 @@
-"""
-Aggregation of `ModuleRecord` objects.
-"""
-from typing import Any, Dict, Iterator, List, Optional, Set
+"""Aggregation of `ModuleRecord` objects."""
+from __future__ import annotations
 
-from handsdown.ast_parser.node_records.module_record import ModuleRecord
-from handsdown.utils.import_string import ImportString
+from typing import TYPE_CHECKING, Any
+
 from handsdown.utils.logger import get_logger
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from handsdown.ast_parser.node_records.module_record import ModuleRecord
+    from handsdown.utils.import_string import ImportString
 
 
 class ModuleRecordList:
-    """
-    Aggregation of `ModuleRecord` objects.
-    """
+    """Aggregation of `ModuleRecord` objects."""
 
     def __init__(self) -> None:
         self._logger = get_logger()
-        self.data: List[ModuleRecord] = []
-        self.import_string_map: Dict[ImportString, Any] = {}
+        self.data: list[ModuleRecord] = []
+        self.import_string_map: dict[ImportString, Any] = {}
 
-    def find_module_record(self, import_string: ImportString) -> Optional[ModuleRecord]:
+    def find_module_record(self, import_string: ImportString) -> ModuleRecord | None:
         """
         Find `ModuleRecord` by it's import string.
 
@@ -27,6 +29,7 @@ class ModuleRecordList:
 
         Returns:
             Found `NodeRecord` instance or None.
+
         """
         while True:
             module_record = self.import_string_map.get(import_string)
@@ -40,12 +43,13 @@ class ModuleRecordList:
 
         return None
 
-    def get_package_names(self) -> Set[str]:
+    def get_package_names(self) -> set[str]:
         """
         Get top level import strings.
 
         Returns:
             A set of top level imports as strings.
+
         """
         return {i.import_string.parts[0] for i in self}
 
@@ -55,6 +59,7 @@ class ModuleRecordList:
 
         Arguments:
             module_record -- A new `ModuleRecord`
+
         """
         self.data.append(module_record)
         self.import_string_map[module_record.import_string] = module_record
@@ -65,6 +70,6 @@ class ModuleRecordList:
 
         Yields:
             `ModuleRecord` entries.
+
         """
-        for obj in self.data:
-            yield obj
+        yield from self.data

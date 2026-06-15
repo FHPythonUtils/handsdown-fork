@@ -1,25 +1,11 @@
-[tool.black]
-line-length = 100
-include = "(handsdown|tests)/.*\\.pyi?$"
-target-version = ["py37", "py38", "py39", "py310", "py311"]
-
-[tool.isort]
-profile = "black"
-line_length = 100
-known_first_party = ["handsdown", "tests"]
-src_paths = []
-
-
-[tool.poetry]
+[project]
 name = "handsdown"
 version = "2.1.0"
+requires-python = ">=3.9"
 description = "Python docstring-based documentation generator for lazy perfectionists."
-authors = ["Vlad Emelianov <vlad.emelianov.nz@gmail.com>"]
-license = "MIT"
+authors = [{ name = "Vlad Emelianov", email = "vlad.emelianov.nz@gmail.com" }]
+license = { file = "LICENSE" }
 readme = "README.md"
-homepage = "https://vemel.github.io/handsdown/"
-repository = "https://github.com/vemel/handsdown"
-documentation = "https://vemel.github.io/handsdown/"
 keywords = ["autodoc", "documentation", "generator", "markdown"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -31,52 +17,53 @@ classifiers = [
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: Implementation :: CPython",
     "Typing :: Typed",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-packages = [{ include = "handsdown" }]
-include = ["handsdown/py.typed", "handsdown/templates/**/*.jinja2"]
+dependencies = [
+    "importlib-resources",
+    "jinja2",
+    "black",
+    "basedpyright>=1.39.8",
+]
 
-[tool.poetry.scripts]
-handsdown = 'handsdown.main:main'
 
-[tool.poetry.urls]
-"Documentation" = "https://handsdown.readthedocs.io/en/latest/"
-"Source" = "https://github.com/vemel/handsdown"
-"Bug Tracker" = "https://github.com/vemel/handsdown/issues"
+[dependency-groups]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest-cov",
+    "pytest",
+    "types-setuptools"
+]
 
-[tool.poetry.dependencies]
-python = "^3.7"
-pip = "*"
-typed-ast = "*"
-importlib-resources = "*"
-jinja2 = "*"
-black = "*"
 
-[tool.poetry.dev-dependencies]
-isort = { version = "*", python = ">=3.10" }
-black = { version = "*", python = ">=3.10" }
-mypy = { version = "*", python = ">=3.10" }
-flake8 = { version = "*", python = ">=3.10" }
-pytest = { version = "*", python = ">=3.10" }
-pytest-cov = { version = "*", python = ">=3.10" }
-vulture = { version = "*", python = ">=3.10" }
-importlib-metadata = { version = "*", python = "<3.8" }
-rope = { version = "*", python = ">=3.10" }
-types-setuptools = "*"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ['setuptools']
+build-backend = 'setuptools.build_meta'
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["handsdown", "handsdown.*"]
+
+[project.scripts]
+handsdown = 'handsdown.main:main'
+
+[project.urls]
+Homepage = "https://vemel.github.io/handsdown"
+Documentation = "https://vemel.github.io/handsdown"
+Repository = "https://github.com/vemel/handsdown"
+Changelog = "https://github.com/vemel/handsdown/releases"
+Issues = "https://github.com/vemel/handsdown/issues"
 
 [tool.coverage.report]
 exclude_lines = [
@@ -90,7 +77,83 @@ exclude_lines = [
 ignore_errors = true
 omit = ["tests/*"]
 
-[tool.pyright]
+[[tool.mypy.overrides]]
+module = "mypy-tests.*"
+ignore_errors = true
+
+
+[tool.ruff]
+exclude = [
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    ".vscode",
+    "build",
+    "dist",
+]
+
+line-length = 100
+indent-width = 4
+target-version = "py39"
+
+[tool.ruff.lint]
+preview = true
+select = ["ALL"]
+ignore = [
+	"COM812", # enforce trailing comma
+	"D203",     # 
+	"D212",     #  
+	"D206",     # i want tabs 
+	"D401",     # imperative mood
+	"D1",     # temporarily ignore docstrings
+	"ISC001",
+	"TCH",    # type check blocks
+	"W191",   # ignore this to allow tabs
+	"EXE002", # The file is executable but no shebang is present
+]
+fixable = ["ALL"]
+unfixable = ["B"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+exclude = ["*.pyi", "examples/*", "integration/*"]
+
+[tool.ruff.lint.per-file-ignores]
+"test_*.py" = [
+    "ALL",
+    "ANN",     # missing-type-annotation
+    "D",       # missing-docstring
+    "S101",    # use-of-assert
+    "N803",    # argument-name-does-not-match
+    "PLR2004", # constant-comparison
+    "CPY001",  # missing-copyright
+    "SLF001",  # private-member-access
+]
+"conftest.py" = [
+    "D",       # missing-docstring
+    "S101",    # use-of-assert
+    "N803",    # argument-name-does-not-match
+    "PLR2004", # constant-comparison
+    "CPY001",  # missing-copyright
+    "SLF001",  # private-member-access
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+
+[tool.basedpyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "standard"
+
 include = ["handsdown"]
 exclude = ["**/__pycache__", "tests", "typestubs"]
 reportMissingImports = true
@@ -99,4 +162,5 @@ reportMissingTypeArgument = "error"
 reportIncompatibleMethodOverride = "error"
 reportIncompatibleVariableOverride = "error"
 reportUnknownParameterType = "error"
-pythonVersion = "3.7"
+# pythonVersion = "3.9"
+
