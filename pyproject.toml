@@ -33,6 +33,7 @@ dependencies = [
     "jinja2",
     "black",
     "basedpyright>=1.39.8",
+    "typing-extensions>=4.12.2",
 ]
 
 
