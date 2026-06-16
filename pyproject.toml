@@ -1,9 +1,9 @@
 [project]
-name = "handsdown"
-version = "2.1.0"
+name = "handsdown-fork"
+version = "0.1.0"
 requires-python = ">=3.9"
-description = "Python docstring-based documentation generator for lazy perfectionists."
-authors = [{ name = "Vlad Emelianov", email = "vlad.emelianov.nz@gmail.com" }]
+description = "A fork of handsdown, the python docstring-based documentation generator for lazy perfectionists."
+authors = [{ name = "FredHappyface" }]
 license = { file = "LICENSE" }
 readme = "README.md"
 keywords = ["autodoc", "documentation", "generator", "markdown"]
@@ -38,11 +38,11 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ruff",
-    "mypy",
-    "pytest-cov",
-    "pytest",
-    "types-setuptools"
+    "types-setuptools",
+    "basedpyright>=1.39.7",
+    "coverage>=7.6.12",
+    "pytest>=8.3.5",
+    "ruff>=0.11.0",
 ]
 
 
@@ -77,9 +77,6 @@ exclude_lines = [
 ignore_errors = true
 omit = ["tests/*"]
 
-[[tool.mypy.overrides]]
-module = "mypy-tests.*"
-ignore_errors = true
 
 
 [tool.ruff]
@@ -164,3 +161,16 @@ reportIncompatibleVariableOverride = "error"
 reportUnknownParameterType = "error"
 # pythonVersion = "3.9"
 
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+env_list =
+	py314
+	py313
+	py312
+
+
+[testenv]
+deps = pytest
+commands = pytest tests
+"""

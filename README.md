@@ -1,30 +1,40 @@
-# 🙌 Handsdown - Python documentation generator
+# 🙌 Handsdown-fork
 
+[![GitHub top language](https://img.shields.io/github/languages/top/FHPythonUtils/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](../../)
+[![Issues](https://img.shields.io/github/issues/FHPythonUtils/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](../../issues)
+[![License](https://img.shields.io/github/license/FHPythonUtils/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](/LICENSE.md)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/FHPythonUtils/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](../../commits/master)
+[![Last commit](https://img.shields.io/github/last-commit/FHPythonUtils/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](../../commits/master)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](https://pypistats.org/packages/handsdown-fork)
+[![PyPI Total Downloads](https://img.shields.io/badge/dynamic/json?style=for-the-badge&label=total%20downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi%2Epepy%2Etech%2Fapi%2Fv2%2Fprojects%2Fattestationcheck)](https://pepy.tech/project/handsdown-fork)
+[![PyPI Version](https://img.shields.io/pypi/v/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](https://pypi.org/project/handsdown-fork)
 
-[![PyPI - Handsdown](https://img.shields.io/pypi/v/handsdown.svg?color=blue&label=handsdown)](https://pypi.org/project/handsdown)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/handsdown.svg?color=blue)](https://pypi.org/project/handsdown)
-[![PyPI - Downloads](https://static.pepy.tech/badge/handsdown)](https://pepy.tech/project/handsdown)
-[![Code Coverage](https://img.shields.io/codecov/c/gh/vemel/handsdown.svg)](https://codecov.io/gh/vemel/handsdown/tree/main/handsdown)
-[![Docs](https://img.shields.io/readthedocs/handsdown.svg?color=blue)](https://handsdown.readthedocs.io/)
+A fork of handsdown, the python docstring-based documentation generator for lazy perfectionists.
 
-Python docstring-based documentation generator for lazy perfectionists.
+Huge thanks to <https://github.com/vemel/handsdown> for all of the groundwork!
 
-- [🙌 Handsdown - Python documentation generator](#-handsdown---python-documentation-generator)
+- [🙌 Handsdown-fork](#-handsdown-fork)
   - [Features](#features)
-  - [Do you need handsdown?](#do-you-need-handsdown)
+  - [Do you need handsdown-fork?](#do-you-need-handsdown-fork)
   - [Examples](#examples)
   - [Usage](#usage)
     - [💻 From command line](#-from-command-line)
     - [🚀 Use a new Material design](#-use-a-new-material-design)
-    - [📦 As a Docker image](#-as-a-docker-image)
     - [📝 As a GitHub Pages manager](#-as-a-github-pages-manager)
     - [🐏 Deploy on Read the Docs](#-deploy-on-read-the-docs)
     - [📋 Build static HTML](#-build-static-html)
     - [🧩 As a module](#-as-a-module)
     - [⌨️ CLI arguments](#️-cli-arguments)
+  - [Project Documentation](#project-documentation)
   - [Installation](#installation)
-  - [Development](#development)
-  - [Changelog](#changelog)
+  - [Language information](#language-information)
+  - [Working with the repo](#working-with-the-repo)
+  - [Community Files](#community-files)
+    - [Licence](#licence)
+    - [Code of Conduct](#code-of-conduct)
+    - [Contributing](#contributing)
+    - [Security](#security)
+    - [Support](#support)
 
 ## Features
 
@@ -36,17 +46,17 @@ Python docstring-based documentation generator for lazy perfectionists.
   docstrings support. All of them are converted to a valid Markdown.
 - Works with [Django](https://www.djangoproject.com/) and [Flask](https://palletsprojects.com/p/flask/) apps
 - Can be used locally, or
-  [right on GitHub](https://github.com/vemel/handsdown/blob/docs/docsmd/README.md) or even deployed on
+  [right on GitHub](https://github.com/FHPythonUtils/handsdown-fork/blob/docs/README.md) or even deployed on
   [GitHub Pages](https://vemel.github.io/handsdown/) and [Read the Docs](https://handsdown.readthedocs.io/)!
 - Signatures for every class, function, property and method.
 - Support for type annotations. Even for the ones from the `__future__`!
-- Nice list of all modules in [Index](https://github.com/vemel/handsdown/blob/docs/docsmd/README.md)
+- Nice list of all modules in [Index](https://github.com/FHPythonUtils/handsdown-fork/blob/docs/README.md)
 - Gather all scattered `README.md` in submodules to one place
 - Find related source code from every doc section.
 - Make links by just adding `module.import.String` to docs.
 - Do you use type annotations? Well, you get auto-discovery of related modules for free!
 
-## Do you need handsdown?
+## Do you need handsdown-fork?
 
 You definitely *do* if you:
 
@@ -57,23 +67,16 @@ You definitely *do* if you:
 - are proud of your project and not afraid to show it
 - love Open Source
 
-And probably *do not* if you:
-
-- not very into docstrings and type annotations
-- like to abstract a documentation away from the way things really are
-- use [Pandas docstrings](https://pandas.pydata.org/pandas-docs/stable/development/contributing_docstring.html)
-  as they are not supported yet
-
 ## Examples
 
 - [All documentation](https://vemel.github.io/handsdown/) in this project
-- [Main](https://github.com/vemel/handsdown/blob/main/examples/main_example.py) with [generated output](https://github.com/vemel/handsdown/tree/docs/docsmd/examples/main_example.md)
-- [RST docstrings](https://github.com/vemel/handsdown/blob/main/examples/rst_docstrings.py) with [generated output](https://github.com/vemel/handsdown/tree/docs/docsmd/examples/rst_docstrings.md)
-- [Google docstrings](https://github.com/vemel/handsdown/blob/main/examples/google_docstrings.py) with [generated output](https://github.com/vemel/handsdown/tree/docs/docsmd/examples/google_docstrings.md)
-- [PEP 257 docstrings](https://github.com/vemel/handsdown/blob/main/examples/pep257_docstrings.py) with [generated output](https://github.com/vemel/handsdown/tree/docs/docsmd/examples/pep257_docstrings.md)
-- [Sphinx docstrings](https://github.com/vemel/handsdown/blob/main/examples/sphinx_docstrings.py) with [generated output](https://github.com/vemel/handsdown/tree/docs/docsmd/examples/sphinx_docstrings.md)
-- [Type annotations](https://github.com/vemel/handsdown/blob/main/examples/typed.py) with [generated output](https://github.com/vemel/handsdown/tree/docs/docsmd/examples/typed.md)
-- [Comment-style type annotations](https://github.com/vemel/handsdown/blob/main/examples/comment_typed.py) with [generated output](https://github.com/vemel/handsdown/tree/docs/docsmd/examples/comment_typed.md)
+- [Main](https://github.com/FHPythonUtils/handsdown-fork/blob/main/examples/main_example.py) with [generated output](https://github.com/FHPythonUtils/handsdown-fork/tree/docs/examples/main_example.md)
+- [RST docstrings](https://github.com/FHPythonUtils/handsdown-fork/blob/main/examples/rst_docstrings.py) with [generated output](https://github.com/FHPythonUtils/handsdown-fork/tree/docs/examples/rst_docstrings.md)
+- [Google docstrings](https://github.com/FHPythonUtils/handsdown-fork/blob/main/examples/google_docstrings.py) with [generated output](https://github.com/FHPythonUtils/handsdown-fork/tree/docs/examples/google_docstrings.md)
+- [PEP 257 docstrings](https://github.com/FHPythonUtils/handsdown-fork/blob/main/examples/pep257_docstrings.py) with [generated output](https://github.com/FHPythonUtils/handsdown-fork/tree/docs/examples/pep257_docstrings.md)
+- [Sphinx docstrings](https://github.com/FHPythonUtils/handsdown-fork/blob/main/examples/sphinx_docstrings.py) with [generated output](https://github.com/FHPythonUtils/handsdown-fork/tree/docs/examples/sphinx_docstrings.md)
+- [Type annotations](https://github.com/FHPythonUtils/handsdown-fork/blob/main/examples/typed.py) with [generated output](https://github.com/FHPythonUtils/handsdown-fork/tree/docs/examples/typed.md)
+- [Comment-style type annotations](https://github.com/FHPythonUtils/handsdown-fork/blob/main/examples/comment_typed.py) with [generated output](https://github.com/FHPythonUtils/handsdown-fork/tree/docs/examples/comment_typed.md)
 
 ## Usage
 
@@ -111,29 +114,10 @@ handsdown --external `git config --get remote.origin.url` -o docsmd -n <project_
 # generate html files to docs folder
 python -m mkdocs build
 ```
-
+<!-- 
 ### 📦 As a Docker image
 
-- Install [Docker](https://docs.docker.com/install/)
-- Pull latest `handsdown` version and tag it
-
-```bash
-docker pull ghcr.io/vemel/handsdown/handsdown:latest
-docker tag ghcr.io/vemel/handsdown/handsdown:latest handsdown
-```
-
-- Generate docs for `ProjectName` in current directory
-
-```bash
-# for Python 3 project
-docker run -v `pwd`:/app handsdown -n ProjectName
-
-# for Python 2 project
-PYTHON_VER=2 docker run -v `pwd`:/app handsdown -n ProjectName
-
-# generate documentation for deployment
-docker run -v `pwd`:/app handsdown --external `git config --get remote.origin.url` -n ProjectName --create-configs
-```
+Work in progress  -->
 
 ### 📝 As a GitHub Pages manager
 
@@ -272,27 +256,118 @@ handsdown [-h] [--exclude [EXCLUDE ...]] [-i INPUT_PATH] [-f [FILES ...]]
 | `-t` / `--theme` | Output mkdocs theme: `readthedocs` or `material` | `readthedocs` |
 | `-h` | Show help | |
 
+## Project Documentation
+
+A high-level overview of how the documentation is organized organized will help you know
+where to look for certain things:
+
+<!--
+- [Tutorials](/documentation/tutorials) take you by the hand through a series of steps to get
+  started using the software. Start here if you’re new.
+-->
+- The [Technical Reference](/docs) documents APIs and other aspects of the
+  machinery. This documentation describes how to use the classes and functions at a lower level
+  and assume that you have a good high-level understanding of the software. Note this is generated
+  with handsdown-fork
+<!--
+- The [Help](/documentation/help) guide provides a starting point and outlines common issues that you
+  may have.
+-->
 
 ## Installation
 
 Install using `pip` from PyPI
 
 ```bash
-pip install handsdown
+pip install handsdown-fork
 ```
 
 or directly from GitHub if you cannot wait to test new features
 
 ```bash
-pip install git+https://github.com/vemel/handsdown.git
+pip install git+https://github.com/FHPythonUtils/handsdown-fork.git
 ```
 
-## Development
+## Language information
 
-- Install [poetry](https://python-poetry.org/)
-- Run `poetry install`
-- Use `black` formatter in your IDE
+Using python 3.9, to 3.14
 
-## Changelog
+## Working with the repo
 
-Changelog can be found in [Releases](https://github.com/vemel/handsdown/releases)
+Clone, the repo with
+
+```bash
+git clone https://github.com/FHPythonUtils/handsdown-fork
+```
+
+Format
+
+```sh
+uv run ruff format
+```
+
+Linting
+
+```sh
+uv run ruff check
+uv run python3 -m basedpyright -p .
+```
+
+Testing
+
+```sh
+uv run python3 -m pytest
+```
+
+Alternatively use `tox` to run tests over a range of python versions
+
+```sh
+uvx tox
+```
+
+Documentation
+
+```sh
+uv run handsdown
+```
+
+## Community Files
+
+### Licence
+
+MIT License
+Copyright (c) FredHappyface
+Copyright (c) 2019 Vlad Emelianov
+(See the [LICENSE](/LICENSE) for more information.)
+
+<!-- ### Changelog
+
+See the [Changelog](/CHANGELOG.md) for more information. -->
+
+### Code of Conduct
+
+Online communities include people from many backgrounds. The *Project*
+contributors are committed to providing a friendly, safe and welcoming
+environment for all. Please see the
+[Code of Conduct](https://github.com/FHPythonUtils/.github/blob/master/CODE_OF_CONDUCT.md)
+ for more information.
+
+### Contributing
+
+Contributions are welcome, please see the
+[Contributing Guidelines](https://github.com/FHPythonUtils/.github/blob/master/CONTRIBUTING.md)
+for more information.
+
+### Security
+
+Thank you for improving the security of the project, please see the
+[Security Policy](https://github.com/FHPythonUtils/.github/blob/master/SECURITY.md)
+for more information.
+
+### Support
+
+Thank you for using this project, I hope it is of use to you. Please be aware that
+those involved with the project often do so for fun along with other commitments
+(such as work, family, etc). Please see the
+[Support Policy](https://github.com/FHPythonUtils/.github/blob/master/SUPPORT.md)
+for more information.
