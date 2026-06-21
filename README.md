@@ -6,7 +6,7 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/FHPythonUtils/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](../../commits/master)
 [![Last commit](https://img.shields.io/github/last-commit/FHPythonUtils/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](../../commits/master)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](https://pypistats.org/packages/handsdown-fork)
-[![PyPI Total Downloads](https://img.shields.io/badge/dynamic/json?style=for-the-badge&label=total%20downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi%2Epepy%2Etech%2Fapi%2Fv2%2Fprojects%2Fattestationcheck)](https://pepy.tech/project/handsdown-fork)
+[![PyPI Total Downloads](https://img.shields.io/pepy/dt/handsdown-fork?style=for-the-badge&label=Total%20Downloads&cacheSeconds=28800)](https://pepy.tech/project/handsdown-fork)
 [![PyPI Version](https://img.shields.io/pypi/v/handsdown-fork.svg?style=for-the-badge&cacheSeconds=28800)](https://pypi.org/project/handsdown-fork)
 
 A fork of handsdown, the python docstring-based documentation generator for lazy perfectionists.
